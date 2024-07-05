@@ -1,6 +1,4 @@
-QT       += core gui
-
-QT  +=  sql
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -11,31 +9,30 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    check_page.cpp \
+    campus_map.cpp \
+    database_manager.cpp \
     help_page.cpp \
     main.cpp \
-    mainwindow.cpp \
+    main_page.cpp \
     manage_page.cpp \
-    serialization.cpp
+    view_page.cpp
 
 HEADERS += \
-    check_page.h \
+    campus_map.h \
+    database_manager.h \
     help_page.h \
-    mainwindow.h \
+    main_page.h \
     manage_page.h \
-    my_map.h \
-    serialization.h
+    types.h \
+    view_page.h
 
 FORMS += \
-    check_page.ui \
     help_page.ui \
-    mainwindow.ui \
-    manage_page.ui
+    main_page.ui \
+    manage_page.ui \
+    view_page.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-RESOURCES += \
-    res.qrc
