@@ -8,6 +8,7 @@ class ManagePage;
 }
 
 class ManagePage : public QWidget {
+  friend class MessageMediator;
   Q_OBJECT
 
  public:

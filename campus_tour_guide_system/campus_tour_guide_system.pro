@@ -15,6 +15,7 @@ SOURCES += \
     main.cpp \
     main_page.cpp \
     manage_page.cpp \
+    message_mediator.cpp \
     view_page.cpp
 
 HEADERS += \
@@ -23,6 +24,7 @@ HEADERS += \
     help_page.h \
     main_page.h \
     manage_page.h \
+    message_mediator.h \
     types.h \
     view_page.h
 

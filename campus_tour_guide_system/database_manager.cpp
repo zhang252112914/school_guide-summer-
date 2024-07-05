@@ -1,7 +1,5 @@
 #include "database_manager.h"
 
-#include "campus_map.h"
-
 DatabaseManager::DatabaseManager(const QString &path, QObject *parent)
     : QObject{parent} {
   db = QSqlDatabase::addDatabase("QSQLITE");
@@ -47,19 +45,6 @@ DatabaseManager::DatabaseManager(const QString &path, QObject *parent)
 }
 
 DatabaseManager::~DatabaseManager() { db.close(); }
-
-void DatabaseManager::SetCampusMap(const CampusMap *cp) {
-  campus_map = cp;
-
-  // Capture signals sent by DatabaseManager object and transfer data to Slot
-  // functions
-  connect(campus_map, &CampusMap::NodeAdded, this,
-          &DatabaseManager::SerializeNodeSlot);
-  connect(campus_map, &CampusMap::EdgeAdded, this,
-          &DatabaseManager::SerializeEdgeSlot);
-  connect(campus_map, &CampusMap::InfoAdded, this,
-          &DatabaseManager::SerializeInfoSlot);
-}
 
 // Read data from database and translate its type to node, edge and info
 void DatabaseManager::DeserializeNodes() {

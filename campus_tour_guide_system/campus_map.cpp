@@ -1,18 +1,6 @@
 #include "campus_map.h"
 
-#include "database_manager.h"
-
 CampusMap::CampusMap(QObject* parent) : QObject{parent} {}
-
-void CampusMap::SetDatabaseManager(const DatabaseManager* db) {
-  db_manager = db;
-  connect(db_manager, &DatabaseManager::NodeLoaded, this,
-          &CampusMap::ReadNodeSlot);
-  connect(db_manager, &DatabaseManager::EdgeLoaded, this,
-          &CampusMap::ReadEdgeSlot);
-  connect(db_manager, &DatabaseManager::InfoLoaded, this,
-          &CampusMap::ReadInfoSlot);
-}
 
 void CampusMap::AddNode(double pos_x, double pos_y) {
   node_count++;

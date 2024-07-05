@@ -5,8 +5,12 @@
 
 #include "campus_map.h"
 #include "database_manager.h"
+#include "help_page.h"
 #include "main_page.h"
+#include "manage_page.h"
+#include "message_mediator.h"
 #include "types.h"
+#include "view_page.h"
 
 int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
@@ -16,7 +20,10 @@ int main(int argc, char *argv[]) {
   qRegisterMetaType<Edge>("Edge");
   qRegisterMetaType<Info>("Info");
 
-  MainPage w;
+  MainPage *main_page = new MainPage();
+  ViewPage *view_page = new ViewPage();
+  ManagePage *manage_page = new ManagePage();
+  HelpPage *help_page = new HelpPage();
 
   // DatabaseManager initialization
   QString path = QDir::currentPath() + QDir::separator() + "my_database.db";
@@ -26,16 +33,17 @@ int main(int argc, char *argv[]) {
   // CampusMap initialization
   CampusMap *campus_map = new CampusMap();
 
-  db_manager->SetCampusMap(campus_map);
-  campus_map->SetDatabaseManager(db_manager);
+  MessageMediator *message_mediator = new MessageMediator(
+      main_page, view_page, manage_page, help_page, db_manager, campus_map);
 
   db_manager->DeserializeNodes();
   db_manager->DeserializeEdges();
   db_manager->DeserializeInfos();
 
-  w.show();
+  main_page->show();
   int return_value = a.exec();
   delete campus_map;
   delete db_manager;
+  delete message_mediator;
   return return_value;
 }

@@ -8,24 +8,18 @@
 
 #include "types.h"
 
-class DatabaseManager;
-
 /**
  * @brief CampusMap class is used to store site information and address shortest
  * path.
  */
-
 class CampusMap : public QObject {
+  friend class MessageMediator;
+
   Q_OBJECT
+
  public:
   explicit CampusMap(QObject* parent = nullptr);
 
-  /**
-   * @brief SetDatabaseManager Set the DatabaseManager object from which
-   * campus_map reads data.
-   * @param db DatabaseManager object from which campus_map reads data.
-   */
-  void SetDatabaseManager(const DatabaseManager* db);
   /**
    * These Three functions are used to store new data during app execution,
    * which will send signal to DatabaseManager.
@@ -87,8 +81,6 @@ class CampusMap : public QObject {
   int node_count = 0;
   int edge_count = 0;
   int info_count = 0;
-
-  const DatabaseManager* db_manager;
 
  signals:
   /**

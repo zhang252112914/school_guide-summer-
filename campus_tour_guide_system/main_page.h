@@ -19,6 +19,7 @@ QT_END_NAMESPACE
  */
 
 class MainPage : public QWidget {
+  friend class MessageMediator;
   Q_OBJECT
 
  public:
@@ -32,23 +33,14 @@ class MainPage : public QWidget {
    * appropriate subpage will show.
    */
   void on_view_button_clicked();
-
   void on_manage_button_clicked();
-
   void on_help_button_clicked();
 
  private:
   Ui::MainPage *main_page;
-
-  /**
-   * @brief Pointers to subpages within the main application interface.
-   *
-   * help_page: Points to the help subpage, providing user assistance.
-   * manage_page: Points to the manage subpage, enabling management features.
-   * view_page: Points to the view subpage, where main content is displayed.
-   */
-  HelpPage *help_page;
-  ManagePage *manage_page;
-  ViewPage *view_page;
+ signals:
+  void ShowViewPage();
+  void ShowManagePage();
+  void ShowHelpPage();
 };
 #endif  // MAIN_PAGE_H

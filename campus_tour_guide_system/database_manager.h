@@ -13,24 +13,19 @@
 
 #include "types.h"
 
-class CampusMap;
-
 /**
  * @brief The DatabaseManager class handles database CRUD and communicates with
  * CampusMap class.
  */
 
 class DatabaseManager : public QObject {
+  friend class MessageMediator;
+
   Q_OBJECT
+
  public:
   explicit DatabaseManager(const QString& path, QObject* parent = nullptr);
   ~DatabaseManager();
-
-  /**
-   * @brief SetCampusMap Set private member campus_map
-   * @param cp pointer to CampusMap object
-   */
-  void SetCampusMap(const CampusMap* cp);
 
   /**
    * These three functions are used to translate data stored in database to the
@@ -51,7 +46,6 @@ class DatabaseManager : public QObject {
 
  private:
   QSqlDatabase db;
-  const CampusMap* campus_map;
 
  signals:
   /**
