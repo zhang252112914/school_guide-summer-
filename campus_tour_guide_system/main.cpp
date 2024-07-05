@@ -45,5 +45,9 @@ int main(int argc, char *argv[]) {
   delete campus_map;
   delete db_manager;
   delete message_mediator;
+  delete view_page;
+  delete manage_page;
+  delete help_page;
+  delete main_page;
   return return_value;
 }
