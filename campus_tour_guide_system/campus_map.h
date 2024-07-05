@@ -50,7 +50,20 @@ class CampusMap : public QObject {
   QString GetInfo(int id);
   QString GetPicPath(int id);
 
-  double FindShortestPath(int node_one_id, int node_two_id);
+  //每次查找之前都需要先建立好邻接矩阵
+  QPair<QVector<int>, QVector<QVector<int>>> FindPath(int start, int end);
+
+  QVector<QVector<double>> BuildMatrix();
+
+  void dfs(int current, int end, const QVector<QVector<double>>& matrix,
+           QVector<int>& path, QVector<QVector<int>>& allPaths);
+
+  //返回最短路线上的节点
+  QVector<int> FindShortestPath(int node_one_id, int node_two_id,
+                                const QVector<QVector<double>>& matrix);
+  //返回两个节点之间的所有路径
+  QVector<QVector<int>> FindAllPaths(int start, int end,
+                                     const QVector<QVector<double>>& matrix);
 
  private slots:
   /**
