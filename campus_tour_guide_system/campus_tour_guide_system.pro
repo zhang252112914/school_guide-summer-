@@ -12,6 +12,7 @@ SOURCES += \
     campus_map.cpp \
     database_manager.cpp \
     help_page.cpp \
+    id_manager.cpp \
     main.cpp \
     main_page.cpp \
     manage_page.cpp \
@@ -22,6 +23,7 @@ HEADERS += \
     campus_map.h \
     database_manager.h \
     help_page.h \
+    id_manager.h \
     main_page.h \
     manage_page.h \
     message_mediator.h \
