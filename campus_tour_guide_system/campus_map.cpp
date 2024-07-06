@@ -50,6 +50,15 @@ void CampusMap::ReadInfoSlot(const Info& info) {
   info_count++;
 }
 
+void CampusMap::GetNodeIdFromCoordinateSlot(double pos_x, double pos_y,
+                                            int request_id) {
+  if (map_coordinate.contains({pos_x, pos_y})) {
+    emit IdFound(map_coordinate[{pos_x, pos_y}], request_id);
+  } else {
+    qDebug() << "id not found, please check code";
+  }
+}
+
 QPair<QVector<int>, QVector<QVector<int>>> CampusMap::FindPath(int start,
                                                                int end) {
   QVector<QVector<double>> matrix = BuildMatrix();

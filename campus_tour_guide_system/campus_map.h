@@ -1,6 +1,7 @@
 #ifndef CAMPUS_MAP_H
 #define CAMPUS_MAP_H
 
+#include <QDebug>
 #include <QMap>
 #include <QObject>
 #include <QString>
@@ -50,22 +51,22 @@ class CampusMap : public QObject {
   QString GetInfo(int id);
   QString GetPicPath(int id);
 
-  //下面这一部分是用于路径查询的函数，第一个函数就是接口，直接调用该函数即可
+  // 下面这一部分是用于路径查询的函数，第一个函数就是接口，直接调用该函数即可
 
-  //调用该函数将会返回pair，其中first是最短路径上节点的vector，第二个参数无效，相应函数已被注释
+  // 调用该函数将会返回pair，其中first是最短路径上节点的vector，第二个参数无效，相应函数已被注释
   QPair<QVector<int>, QVector<QVector<int>>> FindPath(int start, int end);
 
-  //基于campusmap中的edges和nodes建立邻接矩阵
+  // 基于campusmap中的edges和nodes建立邻接矩阵
   QVector<QVector<double>> BuildMatrix();
 
-  //深度优先搜索寻找两点之间的所有路径
+  // 深度优先搜索寻找两点之间的所有路径
   void dfs(int current, int end, const QVector<QVector<double>>& matrix,
            QVector<int>& path, QVector<QVector<int>>& allPaths);
 
-  //返回最短路线上的节点
+  // 返回最短路线上的节点
   QVector<int> FindShortestPath(int node_one_id, int node_two_id,
                                 const QVector<QVector<double>>& matrix);
-  //返回两个节点之间的所有路径
+  // 返回两个节点之间的所有路径
   QVector<QVector<int>> FindAllPaths(int start, int end,
                                      const QVector<QVector<double>>& matrix);
 
@@ -80,6 +81,16 @@ class CampusMap : public QObject {
   void ReadEdgeSlot(const Edge& edge);
   void ReadInfoSlot(const Info& info);
 
+  /**
+   * @brief GetNodeIdFromCoordinate This function receives a coordinate pos_x
+   * and pos_y and return the id of corresponding node.
+   * @param pos_x x coordinate value
+   * @param pos_y y coordinate value
+   * @param request_id a unique id to distinguish request sender
+   * @return the id of corresponding node
+   */
+  void GetNodeIdFromCoordinateSlot(double pos_x, double pos_y, int request_id);
+
  private:
   QVector<Node> nodes;  // store site nodes
   QVector<Edge> edges;  // store edges
@@ -91,6 +102,9 @@ class CampusMap : public QObject {
   QMap<int, Node> node_map;
   QMap<int, Edge> edge_map;
   QMap<int, Info> info_map;
+
+  QMap<QPair<double, double>, int>
+      map_coordinate;  // Map between node coordinate and primary key
 
   /**
    * These three variables keep track of data count.
@@ -106,6 +120,14 @@ class CampusMap : public QObject {
   void NodeAdded(const Node& node);
   void EdgeAdded(const Edge& edge);
   void InfoAdded(const Info& info);
+
+  /**
+   * @brief If GetNodeIdFromCoordinateSlot find corresponding node, IdFound
+   * signal will be sent.
+   * @param id the id found
+   * @param request_id the request id of sender
+   */
+  void IdFound(int id, int request_id);
 };
 
 #endif  // CAMPUS_MAP_H
