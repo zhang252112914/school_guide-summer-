@@ -1,10 +1,6 @@
 #ifndef MAIN_PAGE_H
 #define MAIN_PAGE_H
 
-#include <help_page.h>
-#include <manage_page.h>
-#include <view_page.h>
-
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
