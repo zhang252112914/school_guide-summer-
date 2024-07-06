@@ -122,8 +122,8 @@ QVector<int> CampusMap::FindShortestPath(
 QVector<QVector<int>> CampusMap::FindAllPaths(
     int start, int end, const QVector<QVector<double>>& matrix) {
   QVector<QVector<int>> allPaths;
-  QVector<int> path;
-  dfs(start, end, matrix, path, allPaths);
+  // QVector<int> path;
+  // dfs(start, end, matrix, path, allPaths);
   return allPaths;
 }
 
