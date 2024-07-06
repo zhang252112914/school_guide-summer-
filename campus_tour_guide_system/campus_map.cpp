@@ -10,6 +10,7 @@ void CampusMap::AddNode(double pos_x, double pos_y) {
   node_count++;
   nodes.emplaceBack(node_count, pos_x, pos_y);
   node_map[node_count] = {node_count, pos_x, pos_y};
+  map_coordinate[{pos_x, pos_y}] = node_count;
   emit NodeAdded({node_count, pos_x, pos_y});
 }
 
@@ -35,6 +36,7 @@ void CampusMap::AddInfo(const QString& name, const QString& description,
 void CampusMap::ReadNodeSlot(const Node& node) {
   nodes.push_back(node);
   node_map[node.id] = node;
+  map_coordinate[{node.pos_x, node.pos_y}] = node.id;
   node_count++;
 }
 
@@ -52,11 +54,16 @@ void CampusMap::ReadInfoSlot(const Info& info) {
 
 void CampusMap::GetNodeIdFromCoordinateSlot(double pos_x, double pos_y,
                                             int request_id) {
-  if (map_coordinate.contains({pos_x, pos_y})) {
-    emit IdFound(map_coordinate[{pos_x, pos_y}], request_id);
-  } else {
-    qDebug() << "id not found, please check code";
+  QMap<int, Node>::const_iterator ci;
+  for (ci = node_map.constBegin(); ci != node_map.constEnd(); ++ci) {
+    auto& node = ci.value();
+    if (pow(node.pos_x - pos_x, 2) + pow(node.pos_y - pos_y, 2) <=
+        RADIUS * RADIUS) {
+      emit IdFound(ci.key(), request_id);
+      return;
+    }
   }
+  emit IdNotFound(request_id);
 }
 
 QPair<QVector<int>, QVector<QVector<int>>> CampusMap::FindPath(int start,

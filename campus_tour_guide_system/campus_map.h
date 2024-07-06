@@ -1,6 +1,8 @@
 #ifndef CAMPUS_MAP_H
 #define CAMPUS_MAP_H
 
+const double RADIUS = 10.0;
+
 #include <QDebug>
 #include <QMap>
 #include <QObject>
@@ -128,6 +130,7 @@ class CampusMap : public QObject {
    * @param request_id the request id of sender
    */
   void IdFound(int id, int request_id);
+  void IdNotFound(int request_id);
 };
 
 #endif  // CAMPUS_MAP_H
