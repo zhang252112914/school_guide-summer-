@@ -50,11 +50,15 @@ class CampusMap : public QObject {
   QString GetInfo(int id);
   QString GetPicPath(int id);
 
-  //每次查找之前都需要先建立好邻接矩阵
+  //下面这一部分是用于路径查询的函数，第一个函数就是接口，直接调用该函数即可
+
+  //调用该函数将会返回pair，其中first是最短路径上节点的vector，第二个参数无效，相应函数已被注释
   QPair<QVector<int>, QVector<QVector<int>>> FindPath(int start, int end);
 
+  //基于campusmap中的edges和nodes建立邻接矩阵
   QVector<QVector<double>> BuildMatrix();
 
+  //深度优先搜索寻找两点之间的所有路径
   void dfs(int current, int end, const QVector<QVector<double>>& matrix,
            QVector<int>& path, QVector<QVector<int>>& allPaths);
 
