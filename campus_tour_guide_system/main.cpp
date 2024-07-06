@@ -7,6 +7,8 @@
 #include <QStackedWidget>
 #include <memory>
 
+#include "add_edge_page.h"
+#include "add_site_page.h"
 #include "campus_map.h"
 #include "database_manager.h"
 #include "help_page.h"
@@ -37,12 +39,16 @@ int main(int argc, char *argv[]) {
   ViewPage *view_page = new ViewPage();
   ManagePage *manage_page = new ManagePage();
   HelpPage *help_page = new HelpPage();
+  AddEdgePage *add_edge_page = new AddEdgePage();
+  AddSitePage *add_site_page = new AddSitePage();
 
   // Add pages to the stacked widget
   stacked_widget->addWidget(main_page);
   stacked_widget->addWidget(view_page);
   stacked_widget->addWidget(manage_page);
   stacked_widget->addWidget(help_page);
+  stacked_widget->addWidget(add_edge_page);
+  stacked_widget->addWidget(add_site_page);
 
   // DatabaseManager initialization
   QDir dir;
@@ -74,8 +80,8 @@ int main(int argc, char *argv[]) {
 
   // MessageMediator initialization
   auto message_mediator = std::make_unique<MessageMediator>(
-      main_page, view_page, manage_page, help_page, db_manager.get(),
-      campus_map.get(), stacked_widget);
+      main_page, view_page, manage_page, help_page, add_edge_page,
+      add_site_page, db_manager.get(), campus_map.get(), stacked_widget);
 
   // Deserialize data
   db_manager->DeserializeNodes();

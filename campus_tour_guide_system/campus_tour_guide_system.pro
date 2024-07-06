@@ -10,6 +10,8 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    add_edge_page.cpp \
+    add_site_page.cpp \
     campus_map.cpp \
     database_manager.cpp \
     graphics_display.cpp \
@@ -22,6 +24,8 @@ SOURCES += \
     id_manager.cpp
 
 HEADERS += \
+    add_edge_page.h \
+    add_site_page.h \
     campus_map.h \
     database_manager.h \
     graphics_display.h \
@@ -35,6 +39,8 @@ HEADERS += \
     id_manager.h
 
 FORMS += \
+    add_edge_page.ui \
+    add_site_page.ui \
     help_page.ui \
     main_page.ui \
     manage_page.ui \

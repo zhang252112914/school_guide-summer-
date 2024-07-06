@@ -13,3 +13,13 @@ void ManagePage::on_return_button_clicked() {
   this->hide();
   emit BackToMainPage();
 }
+
+void ManagePage::on_add_edge_button_clicked() {
+  this->hide();
+  emit ShowAddEdgePage();
+}
+
+void ManagePage::on_add_site_button_clicked() {
+  this->hide();
+  emit ShowAddSiteEdge();
+}

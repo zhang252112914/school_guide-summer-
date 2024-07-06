@@ -2,6 +2,8 @@
 
 MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
                                  ManagePage *manage_page, HelpPage *help_page,
+                                 AddEdgePage *add_edge_page,
+                                 AddSitePage *add_site_page,
                                  DatabaseManager *db, CampusMap *cp,
                                  QStackedWidget *sw, QObject *parent)
     : QObject{parent},
@@ -9,6 +11,8 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
       view_page(view_page),
       manage_page(manage_page),
       help_page(help_page),
+      add_edge_page(add_edge_page),
+      add_site_page(add_site_page),
       db_manager(db),
       campus_map(cp),
       stacked_widget(sw) {
@@ -79,6 +83,13 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
   connect(campus_map, &CampusMap::ReturnPathVector, view_page,
           &ViewPage::HandlePathVector);
   connect(campus_map, &CampusMap::InfoFound, view_page, &ViewPage::DisplayInfo);
-  connect(campus_map, &CampusMap::NodeNotFound, view_page,
-          &ViewPage::OnNodeNotFound);
+  connect(manage_page, &ManagePage::ShowAddEdgePage, add_edge_page,
+          &AddEdgePage::show);
+  connect(manage_page, &ManagePage::ShowAddSiteEdge, add_site_page,
+          &AddSitePage::show);
+
+  connect(add_edge_page, &AddEdgePage::BackToManagePage, manage_page,
+          &ManagePage::show);
+  connect(add_site_page, &AddSitePage::BackToManagePage, manage_page,
+          &ManagePage::show);
 }
