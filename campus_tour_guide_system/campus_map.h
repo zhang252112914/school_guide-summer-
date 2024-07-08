@@ -85,13 +85,20 @@ class CampusMap : public QObject {
 
   /**
    * @brief GetNodeIdFromCoordinate This function receives a coordinate pos_x
-   * and pos_y and return the id of corresponding node.
+   * and pos_y and emit the id of corresponding node.
    * @param pos_x x coordinate value
    * @param pos_y y coordinate value
    * @param request_id a unique id to distinguish request sender
-   * @return the id of corresponding node
    */
   void GetNodeIdFromCoordinateSlot(double pos_x, double pos_y, int request_id);
+
+  /**
+   * @brief GetInfoFromIdSlot This function receives an id and emit the info
+   * with this id.
+   * @param id the id of requested info
+   * @param request_id a unique id to distinguish request sender
+   */
+  void GetInfoFromIdSlot(int id, int request_id);
 
  private:
   QVector<Node> nodes;  // store site nodes
@@ -131,6 +138,15 @@ class CampusMap : public QObject {
    */
   void IdFound(int id, int request_id);
   void IdNotFound(int request_id);
+
+  /**
+   * @brief If GetInfoFromIdSlot find corresponding info, InfoFound
+   * signal will be sent.
+   * @param info the info found
+   * @param request_id the request id of sender
+   */
+  void InfoFound(const Info& info, int request_id);
+  void InfoNotFound(int request_id);
 };
 
 #endif  // CAMPUS_MAP_H

@@ -66,6 +66,14 @@ void CampusMap::GetNodeIdFromCoordinateSlot(double pos_x, double pos_y,
   emit IdNotFound(request_id);
 }
 
+void CampusMap::GetInfoFromIdSlot(int id, int request_id) {
+  if (info_map.contains(id)) {
+    emit InfoFound(info_map[id], request_id);
+  } else {
+    emit InfoNotFound(request_id);
+  }
+}
+
 QPair<QVector<int>, QVector<QVector<int>>> CampusMap::FindPath(int start,
                                                                int end) {
   QVector<QVector<double>> matrix = BuildMatrix();
