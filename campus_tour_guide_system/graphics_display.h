@@ -31,7 +31,8 @@ class GraphicsDisplay : public QGraphicsView {
   void mousePressEvent(QMouseEvent *event) override;
 
  signals:
-  void PointClicked(double x, double y);  // 发送点击位置的信号
+  void MathNode(double pos_x, double pos_y);
+  void pointClicked(double x, double y);  // 发送点击位置的信号
 };
 
 #endif  // GRAPHICS_DISPLAY_H
