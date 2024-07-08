@@ -29,7 +29,10 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
 
   connect(view_page, &ViewPage::BackToMainPage, main_page, &MainPage::show);
   connect(manage_page, &ManagePage::BackToMainPage, main_page, &MainPage::show);
-  connect(help_page, &HelpPage::BackToMainPage, main_page, &MainPage::show);
+  connect(help_page, &HelpPage::BackToMainPage, main_page, [=]() {
+    help_page->CloseAllGif();
+    main_page->show();
+  });
 
   connect(main_page, &MainPage::ShowViewPage, view_page, &ViewPage::show);
   connect(main_page, &MainPage::ShowManagePage, manage_page, &ManagePage::show);

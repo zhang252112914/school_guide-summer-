@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>R-C.jpg</file>
+        <file>moon.gif</file>
+        <file>wind.gif</file>
     </qresource>
 </RCC>

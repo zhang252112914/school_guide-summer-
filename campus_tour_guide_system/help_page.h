@@ -1,6 +1,7 @@
 #ifndef HELP_PAGE_H
 #define HELP_PAGE_H
 
+#include <QString>
 #include <QWidget>
 
 namespace Ui {
@@ -14,6 +15,8 @@ class HelpPage : public QWidget {
  public:
   explicit HelpPage(QWidget *parent = nullptr);
   ~HelpPage();
+  void ShowGif(QString path);
+  void CloseAllGif();
 
  private:
   Ui::HelpPage *help_page;
