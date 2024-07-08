@@ -18,14 +18,14 @@ class ViewPage : public QWidget {
   void resizeEvent(QResizeEvent *event) override;
  private slots:
   void on_return_button_clicked();
-  void handlePointClicked(double x, double y);
-  void on_addNode_Btn_clicked();
+  void HandlePointClicked(double x, double y);
+  void on_addnode_button_clicked();
 
-  void on_pushButton_clicked();
+  void on_clear_button_clicked();
 
  private:
   Ui::ViewPage *view_page;
-  double lastClickedX, lastClickedY;
+  double last_clicked_x, last_clicked_y;
 
  signals:
   void BackToMainPage();

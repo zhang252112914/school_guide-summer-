@@ -1,6 +1,5 @@
 #include "graphics_display.h"
 
-#include <QMouseEvent>
 GraphicsDisplay::GraphicsDisplay(QWidget *parent)
     : QGraphicsView(parent), scene(new QGraphicsScene(this)) {
   this->setScene(scene);

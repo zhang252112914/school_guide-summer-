@@ -1,15 +1,16 @@
 #include "view_page.h"
 
 #include "ui_view_page.h"
+
 ViewPage::ViewPage(QWidget *parent)
     : QWidget(parent), view_page(new Ui::ViewPage) {
   view_page->setupUi(this);
 
-  GraphicsDisplay *graphicsView =
-      qobject_cast<GraphicsDisplay *>(view_page->graphicsView);
-  if (graphicsView) {
-    connect(graphicsView, &GraphicsDisplay::pointClicked, this,
-            &ViewPage::handlePointClicked);
+  GraphicsDisplay *graphics_view =
+      qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
+  if (graphics_view) {
+    connect(graphics_view, &GraphicsDisplay::PointClicked, this,
+            &ViewPage::HandlePointClicked);
   }
 }
 
@@ -19,34 +20,35 @@ void ViewPage::on_return_button_clicked() {
   this->hide();
   emit BackToMainPage();
 }
+
 void ViewPage::resizeEvent(QResizeEvent *event) {
   QWidget::resizeEvent(event);
-  GraphicsDisplay *graphicsView =
-      qobject_cast<GraphicsDisplay *>(view_page->graphicsView);
-  if (graphicsView) {
-    graphicsView->fitViewToScene();
+  GraphicsDisplay *graphics_view =
+      qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
+  if (graphics_view) {
+    graphics_view->FitViewToScene();
   }
 }
 
-void ViewPage::handlePointClicked(double x, double y) {
-  lastClickedX = x;  // 保存x坐标
-  lastClickedY = y;  // 保存y坐标
+void ViewPage::HandlePointClicked(double x, double y) {
+  last_clicked_x = x;  // 保存x坐标
+  last_clicked_y = y;  // 保存y坐标
   qDebug() << "Received point coordinates: x =" << x << ", y =" << y;
 }
 
-void ViewPage::on_addNode_Btn_clicked() {
-  GraphicsDisplay *graphicsView =
-      qobject_cast<GraphicsDisplay *>(view_page->graphicsView);
-  if (graphicsView) {
+void ViewPage::on_addnode_button_clicked() {
+  GraphicsDisplay *graphics_view =
+      qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
+  if (graphics_view) {
     // 连接点
-    graphicsView->connectPoints();
+    graphics_view->ConnectPoints();
   }
 }
 
-void ViewPage::on_pushButton_clicked() {
-  GraphicsDisplay *graphicsView =
-      qobject_cast<GraphicsDisplay *>(view_page->graphicsView);
-  if (graphicsView) {
-    graphicsView->clearPoints();  // 调用清除点的函数
+void ViewPage::on_clear_button_clicked() {
+  GraphicsDisplay *graphics_view =
+      qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
+  if (graphics_view) {
+    graphics_view->ClearPoints();  // 调用清除点的函数
   }
 }

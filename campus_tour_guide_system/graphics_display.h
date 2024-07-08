@@ -32,7 +32,7 @@ class GraphicsDisplay : public QGraphicsView {
 
  signals:
   void MathNode(double pos_x, double pos_y);
-  void pointClicked(double x, double y);  // 发送点击位置的信号
+  void PointClicked(double x, double y);  // 发送点击位置的信号
 };
 
 #endif  // GRAPHICS_DISPLAY_H
