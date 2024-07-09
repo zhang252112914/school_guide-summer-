@@ -103,6 +103,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="route_button">
+         <property name="text">
+          <string>查找路径</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="label_2">
          <property name="minimumSize">
           <size>
