@@ -154,11 +154,13 @@ void CampusMap::DeleteInfoSlot(int node_id) {
   emit InfoDeleted(info_id);
 }
 
+/*
 void CampusMap::ManageIdSend(double pre_x, double pre_y, double last_x,
                              double last_y) {
   GetNodeIdFromCoordinateSlot(pre_x, pre_y, -1);
   GetNodeIdFromCoordinateSlot(last_x, last_y, -1);
 }
+*/
 
 void CampusMap::GetInfoFromIdSlot(int info_id, Sender sender) {
   last_sender = sender;

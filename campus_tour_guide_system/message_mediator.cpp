@@ -47,7 +47,7 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
   connect(main_page, &MainPage::ShowHelpPage, help_page, &HelpPage::show);
 
   connect(view_page, &ViewPage::IdRequest, campus_map,
-          &CampusMap::ManageIdSend);
+          &CampusMap::GetNodeIdFromCoordinateSlot);
   connect(campus_map, &CampusMap::IdFound, view_page,
           &ViewPage::IdsReceiverAndFindCaller);
 }

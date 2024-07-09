@@ -6,8 +6,6 @@ ViewPage::ViewPage(QWidget *parent)
     : QWidget(parent), view_page(new Ui::ViewPage) {
   view_page->setupUi(this);
 
-  connect(view_page->route_button, &QPushButton::clicked, this,
-          &ViewPage::HandleRouteRequest);
   graphics_view = qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
   if (graphics_view) {
     connect(graphics_view, &GraphicsDisplay::PointClicked, this,
@@ -56,23 +54,26 @@ void ViewPage::on_clear_button_clicked() {
   }
 }
 
-void ViewPage::HandleRouteRequest() {
-  emit IdRequest(pre_clicked_x, pre_clicked_y, last_clicked_x, last_clicked_y);
+void ViewPage::IdsReceiverAndFindCaller(int id, Sender sender) {
+  if (sender == Sender::VIEW_PAGE) {
+    if (!first_arrive) {
+      first_arrived_id = id;
+      first_arrive = true;
+      qDebug() << "id1 arrived";
+    } else {
+      second_arrived_id = id;
+      second_arrive = true;
+      qDebug() << "id2 arrived";
+    }
+
+    if (first_arrive && second_arrive) {
+      first_arrive = second_arrive = false;
+      emit CallFindPath(first_arrived_id, second_arrived_id);
+    }
+  }
 }
 
-void ViewPage::IdsReceiverAndFindCaller(int id, int request_id) {
-  if (!first_arrive) {
-    first_arrived_id = id;
-    first_arrive = true;
-    qDebug() << "id1 arrived";
-  } else {
-    second_arrived_id = id;
-    second_arrive = true;
-    qDebug() << "id2 arrived";
-  }
-
-  if (first_arrive && second_arrive) {
-    first_arrive = second_arrive = false;
-    emit CallFindPath(first_arrived_id, second_arrived_id);
-  }
+void ViewPage::on_route_button_clicked() {
+  emit IdRequest(pre_clicked_x, pre_clicked_y, Sender::VIEW_PAGE);
+  emit IdRequest(last_clicked_x, last_clicked_y, Sender::VIEW_PAGE);
 }
