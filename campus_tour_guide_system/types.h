@@ -5,11 +5,12 @@
 #include <QString>
 
 struct Node {
-  bool valid;
   int id;  // use distinguished id to access node and info
 
   double pos_x;
   double pos_y;
+  bool info_valid = false;
+  int info_id = 0;
   Node(int id = 0, double pos_x = 0.0, double pos_y = 0.0)
       : id(id), pos_x(pos_x), pos_y(pos_y) {}
 };
@@ -28,7 +29,7 @@ struct Edge {
 };
 
 struct Info {
-  int id;  // same id with node
+  int id;
   QString name;
   QString description;
   QString pic_path;

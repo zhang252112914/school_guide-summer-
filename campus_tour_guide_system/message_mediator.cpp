@@ -19,6 +19,10 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
           &DatabaseManager::SerializeEdgeSlot);
   connect(campus_map, &CampusMap::InfoAdded, db_manager,
           &DatabaseManager::SerializeInfoSlot);
+  connect(campus_map, &CampusMap::InfoEdited, db_manager,
+          &DatabaseManager::UpdateInfoSlot);
+  connect(campus_map, &CampusMap::InfoDeleted, db_manager,
+          &DatabaseManager::DeleteInfoSlot);
 
   connect(db_manager, &DatabaseManager::NodeLoaded, campus_map,
           &CampusMap::ReadNodeSlot);

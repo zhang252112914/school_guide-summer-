@@ -1,30 +1,34 @@
 #include "campus_map.h"
 
-#include <QPair>
-#include <limits>
-#include <queue>
-
 CampusMap::CampusMap(QObject* parent) : QObject{parent} {}
 
-void CampusMap::AddNode(double pos_x, double pos_y) {
+int CampusMap::AddNode(double pos_x, double pos_y) {
+  if (map_coordinate.contains({pos_x, pos_y})) {
+    return map_coordinate[{pos_x, pos_y}];
+  }
   node_count++;
-  nodes.emplaceBack(node_count, pos_x, pos_y);
-  node_map[node_count] = {node_count, pos_x, pos_y};
+  Node node(node_count, pos_x, pos_y);
+  nodes.append(node);
+  node_map[node_count] = node;
   map_coordinate[{pos_x, pos_y}] = node_count;
-  emit NodeAdded({node_count, pos_x, pos_y});
+  emit NodeAdded(node);
+  return node_count;
 }
 
-void CampusMap::AddEdge(int node_one_id, int node_two_id) {
+void CampusMap::AddEdge(const QPair<double, double>& start,
+                        const QPair<double, double>& end) {
   edge_count++;
-  const Node& n1 = node_map[node_one_id];
-  const Node& n2 = node_map[node_two_id];
   double length =
-      sqrt(pow(n1.pos_x - n2.pos_x, 2) + pow(n1.pos_y - n2.pos_y, 2));
-  edges.emplaceBack(edge_count, node_one_id, node_two_id);
-  edge_map[edge_count] = {edge_count, node_one_id, node_two_id, length};
-  emit EdgeAdded({edge_count, node_one_id, node_two_id, length});
+      sqrt(pow(start.first - end.first, 2) + pow(start.second - end.second, 2));
+  int node_one_id = AddNode(start.first, start.second);
+  int node_two_id = AddNode(end.first, end.second);
+  Edge edge(edge_count, node_one_id, node_two_id, length);
+  edges.append(edge);
+  edge_map[edge_count] = edge;
+  emit EdgeAdded(edge);
 }
 
+/*
 void CampusMap::AddInfo(const QString& name, const QString& description,
                         const QString& pic_path) {
   info_count++;
@@ -32,6 +36,7 @@ void CampusMap::AddInfo(const QString& name, const QString& description,
   info_map[info_count] = {info_count, name, description, pic_path};
   emit InfoAdded({info_count, name, description, pic_path});
 }
+*/
 
 void CampusMap::ReadNodeSlot(const Node& node) {
   nodes.push_back(node);
@@ -50,6 +55,98 @@ void CampusMap::ReadInfoSlot(const Info& info) {
   infos.push_back(info);
   info_map[info.id] = info;
   info_count++;
+}
+
+void CampusMap::AddEdgeSlot(const QVector<QPair<double, double>>& coordinates) {
+  if (coordinates.size() <= 1) return;
+
+  QVector<QPair<double, double>>::ConstIterator ci;
+  for (ci = coordinates.constBegin(); ci != coordinates.constEnd() - 1; ++ci) {
+    QPair<double, double> start = *ci;
+    QPair<double, double> end = *(ci + 1);
+    AddEdge(start, end);
+  }
+}
+
+void CampusMap::AddInfoSlot(int node_id,
+                            const QMap<QString, QString>& info_pair) {
+  if (!info_pair.contains("name") || !info_pair.contains("description") ||
+      !info_pair.contains("pic_path")) {
+    qDebug() << "info_pair is missing one or more required keys.";
+    return;
+  }
+
+  if (!node_map.contains(node_id)) {
+    qDebug() << "Node ID" << node_id << "does not exist.";
+    return;
+  }
+
+  Node& node = node_map[node_id];
+
+  if (node.info_valid) {
+    qDebug() << "Info already exists.";
+    return;
+  }
+
+  node.info_id = ++info_count;
+  node.info_valid = true;
+
+  QString name = info_pair["name"];
+  QString description = info_pair["description"];
+  QString pic_path = info_pair["pic_path"];
+
+  Info info(info_count, name, description, pic_path);
+
+  infos.append(info);
+  info_map[info_count] = info;
+  emit InfoAdded(info);
+}
+
+void CampusMap::EditInfoSlot(int node_id,
+                             const QMap<QString, QString>& info_pair) {
+  if (!info_pair.contains("name") || !info_pair.contains("description") ||
+      !info_pair.contains("pic_path")) {
+    qDebug() << "info_pair is missing one or more required keys.";
+    return;
+  }
+
+  if (!node_map.contains(node_id)) {
+    qDebug() << "Node ID" << node_id << "does not exist.";
+    return;
+  }
+
+  const Node& node = node_map[node_id];
+
+  if (!node.info_valid) {
+    qDebug() << "Site is not valid";
+    return;
+  }
+
+  Info& info = info_map[node.info_id];
+  info.name = info_pair["name"];
+  info.description = info_pair["description"];
+  info.pic_path = info_pair["pic_path"];
+}
+
+void CampusMap::DeleteInfoSlot(int node_id) {
+  if (!node_map.contains(node_id)) {
+    qDebug() << "Node ID" << node_id << "does not exist.";
+    return;
+  }
+
+  Node& node = node_map[node_id];
+
+  if (!node.info_valid) {
+    qDebug() << "Site is not valid";
+    return;
+  }
+
+  int info_id = node.info_id;
+  info_map.remove(info_id);
+  node.info_id = 0;
+  node.info_valid = false;
+
+  emit InfoDeleted(info_id);
 }
 
 void CampusMap::GetNodeIdFromCoordinateSlot(double pos_x, double pos_y,

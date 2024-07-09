@@ -193,3 +193,42 @@ void DatabaseManager::SerializeInfoSlot(const Info &info) {
     qDebug() << "Data inserted successfully!";
   }
 }
+
+void DatabaseManager::UpdateInfoSlot(const Info &info) {
+  if (!db.isOpen()) {
+    qDebug() << "Error: Database is not open";
+    return;
+  }
+
+  QSqlQuery query;
+  query.prepare(
+      "UPDATE infos SET id = :id, name = :name, description = :description, "
+      "pic_path = :pic_path");
+  query.bindValue(":id", info.id);
+  query.bindValue(":name", info.name);
+  query.bindValue(":description", info.description);
+  query.bindValue(":pic_path", info.pic_path);
+
+  if (!query.exec()) {
+    qDebug() << "Update failed: " << query.lastError();
+  } else {
+    qDebug() << "Update succeeded";
+  }
+}
+
+void DatabaseManager::DeleteInfoSlot(int id) {
+  if (!db.isOpen()) {
+    qDebug() << "Error: Database is not open";
+    return;
+  }
+
+  QSqlQuery query;
+  query.prepare("DELETE FROM infos WHERE id = :id");
+  query.bindValue(":id", id);
+
+  if (!query.exec()) {
+    qDebug() << "Delete failed: " << query.lastError();
+  } else {
+    qDebug() << "Delete succeeded";
+  }
+}

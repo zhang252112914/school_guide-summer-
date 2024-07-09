@@ -44,6 +44,9 @@ class DatabaseManager : public QObject {
   void SerializeEdgeSlot(const Edge& edge);
   void SerializeInfoSlot(const Info& info);
 
+  void UpdateInfoSlot(const Info& info);
+  void DeleteInfoSlot(int id);
+
  private:
   QSqlDatabase db;
 

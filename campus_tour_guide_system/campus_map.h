@@ -6,8 +6,11 @@ const double RADIUS = 10.0;
 #include <QDebug>
 #include <QMap>
 #include <QObject>
+#include <QPair>
 #include <QString>
 #include <QVector>
+#include <limits>
+#include <queue>
 
 #include "types.h"
 
@@ -27,10 +30,13 @@ class CampusMap : public QObject {
    * These Three functions are used to store new data during app execution,
    * which will send signal to DatabaseManager.
    */
-  void AddNode(double pos_x, double pos_y);
-  void AddEdge(int node_one_id, int node_two_id);
+  int AddNode(double pos_x, double pos_y);
+  void AddEdge(const QPair<double, double>& start,
+               const QPair<double, double>& end);
+  /*
   void AddInfo(const QString& name, const QString& description,
                const QString& pic_path);
+               */
 
   /**
    * The following six functions are used to get node content.
@@ -83,6 +89,11 @@ class CampusMap : public QObject {
   void ReadEdgeSlot(const Edge& edge);
   void ReadInfoSlot(const Info& info);
 
+  void AddEdgeSlot(const QVector<QPair<double, double>>& coordinates);
+  void AddInfoSlot(int node_id, const QMap<QString, QString>& info_pair);
+  void EditInfoSlot(int node_id, const QMap<QString, QString>& info_pair);
+  void DeleteInfoSlot(int node_id);
+
   /**
    * @brief GetNodeIdFromCoordinate This function receives a coordinate pos_x
    * and pos_y and emit the id of corresponding node.
@@ -129,6 +140,8 @@ class CampusMap : public QObject {
   void NodeAdded(const Node& node);
   void EdgeAdded(const Edge& edge);
   void InfoAdded(const Info& info);
+  void InfoEdited(const Info& info);
+  void InfoDeleted(int id);
 
   /**
    * @brief If GetNodeIdFromCoordinateSlot find corresponding node, IdFound
