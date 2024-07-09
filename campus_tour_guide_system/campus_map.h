@@ -12,6 +12,7 @@ const double RADIUS = 10.0;
 #include <limits>
 #include <queue>
 
+#include "sender_enum.h"
 #include "types.h"
 
 /**
@@ -62,7 +63,7 @@ class CampusMap : public QObject {
   // 下面这一部分是用于路径查询的函数，第一个函数就是接口，直接调用该函数即可
 
   // 调用该函数将会返回pair，其中first是最短路径上节点的vector，第二个参数无效，相应函数已被注释
-  QPair<QVector<int>, QVector<QVector<int>>> FindPath(int start, int end);
+  void FindPath(int start, int end);
 
   // 基于campusmap中的edges和nodes建立邻接矩阵
   QVector<QVector<double>> BuildMatrix();
@@ -77,6 +78,11 @@ class CampusMap : public QObject {
   // 返回两个节点之间的所有路径
   QVector<QVector<int>> FindAllPaths(int start, int end,
                                      const QVector<QVector<double>>& matrix);
+
+ public slots:
+  // 用于接收起始和终点的坐标，并进行两次查询调用，每次发送一个坐标
+  // void ManageIdSend(double pre_x, double pre_y, double last_x, double
+  // last_y);
 
  private slots:
   /**
@@ -101,7 +107,7 @@ class CampusMap : public QObject {
    * @param pos_y y coordinate value
    * @param request_id a unique id to distinguish request sender
    */
-  void GetNodeIdFromCoordinateSlot(double pos_x, double pos_y, int request_id);
+  void GetNodeIdFromCoordinateSlot(double pos_x, double pos_y, Sender sender);
 
   /**
    * @brief GetInfoFromIdSlot This function receives an id and emit the info
@@ -109,7 +115,7 @@ class CampusMap : public QObject {
    * @param id the id of requested info
    * @param request_id a unique id to distinguish request sender
    */
-  void GetInfoFromIdSlot(int id, int request_id);
+  void GetInfoFromIdSlot(int id, Sender sender);
 
  private:
   QVector<Node> nodes;  // store site nodes
@@ -149,8 +155,8 @@ class CampusMap : public QObject {
    * @param id the id found
    * @param request_id the request id of sender
    */
-  void IdFound(int id, int request_id);
-  void IdNotFound(int request_id);
+  void IdFound(int id, Sender sender);
+  void IdNotFound(Sender sender);
 
   /**
    * @brief If GetInfoFromIdSlot find corresponding info, InfoFound
@@ -158,8 +164,11 @@ class CampusMap : public QObject {
    * @param info the info found
    * @param request_id the request id of sender
    */
-  void InfoFound(const Info& info, int request_id);
-  void InfoNotFound(int request_id);
+  void InfoFound(const Info& info, Sender sender);
+  void InfoNotFound(Sender sender);
+
+  // 返回装有路径的vector
+  void ReturnPathVector(QVector<int> route);
 };
 
 #endif  // CAMPUS_MAP_H

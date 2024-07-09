@@ -149,33 +149,40 @@ void CampusMap::DeleteInfoSlot(int node_id) {
   emit InfoDeleted(info_id);
 }
 
+/*
+void CampusMap::ManageIdSend(double pre_x, double pre_y, double last_x,
+                             double last_y) {
+  GetNodeIdFromCoordinateSlot(pre_x, pre_y, -1);
+  GetNodeIdFromCoordinateSlot(last_x, last_y, -1);
+}
+*/
+
 void CampusMap::GetNodeIdFromCoordinateSlot(double pos_x, double pos_y,
-                                            int request_id) {
+                                            Sender sender) {
   QMap<int, Node>::const_iterator ci;
   for (ci = node_map.constBegin(); ci != node_map.constEnd(); ++ci) {
     auto& node = ci.value();
     if (pow(node.pos_x - pos_x, 2) + pow(node.pos_y - pos_y, 2) <=
         RADIUS * RADIUS) {
-      emit IdFound(ci.key(), request_id);
+      emit IdFound(ci.key(), sender);
       return;
     }
   }
-  emit IdNotFound(request_id);
+  emit IdNotFound(sender);
 }
 
-void CampusMap::GetInfoFromIdSlot(int id, int request_id) {
+void CampusMap::GetInfoFromIdSlot(int id, Sender sender) {
   if (info_map.contains(id)) {
-    emit InfoFound(info_map[id], request_id);
+    emit InfoFound(info_map[id], sender);
   } else {
-    emit InfoNotFound(request_id);
+    emit InfoNotFound(sender);
   }
 }
 
-QPair<QVector<int>, QVector<QVector<int>>> CampusMap::FindPath(int start,
-                                                               int end) {
+void CampusMap::FindPath(int start, int end) {
   QVector<QVector<double>> matrix = BuildMatrix();
-  return QPair<QVector<int>, QVector<QVector<int>>>(
-      FindShortestPath(start, end, matrix), FindAllPaths(start, end, matrix));
+  QVector<int> shortest_path = FindShortestPath(start, end, matrix);
+  emit ReturnPathVector(shortest_path);
 }
 
 QVector<QVector<double>> CampusMap::BuildMatrix() {

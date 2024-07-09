@@ -11,24 +11,27 @@ CONFIG += c++17
 SOURCES += \
     campus_map.cpp \
     database_manager.cpp \
+    graphics_display.cpp \
     help_page.cpp \
-    id_manager.cpp \
     main.cpp \
     main_page.cpp \
     manage_page.cpp \
     message_mediator.cpp \
-    view_page.cpp
+    view_page.cpp \
+    id_manager.cpp
 
 HEADERS += \
     campus_map.h \
     database_manager.h \
+    graphics_display.h \
     help_page.h \
-    id_manager.h \
     main_page.h \
     manage_page.h \
     message_mediator.h \
+    sender_enum.h \
     types.h \
-    view_page.h
+    view_page.h \
+    id_manager.h
 
 FORMS += \
     help_page.ui \
