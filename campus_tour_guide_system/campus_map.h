@@ -147,7 +147,7 @@ class CampusMap : public QObject {
   void InfoNotFound(Sender sender);
 
   // 返回装有路径的vector
-  void ReturnPathVector(QVector<int> route);
+  void ReturnPathVector(QVector<QPair<double, double>> route);
 
   void SitesFound(QVector<QPair<QPair<double, double>, QString>> sites,
                   Sender sender);

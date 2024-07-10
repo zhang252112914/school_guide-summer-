@@ -174,7 +174,12 @@ void CampusMap::GetSiteSlot(Sender sender) {
 void CampusMap::FindPath(int start, int end) {
   QVector<QVector<double>> matrix = BuildMatrix();
   QVector<int> shortest_path = FindShortestPath(start, end, matrix);
-  emit ReturnPathVector(shortest_path);
+  QVector<QPair<double, double>> shortest_path_by_coordinate;
+  for (auto it : shortest_path) {
+    shortest_path_by_coordinate.push_back(
+        QPair<double, double>(node_map[it].pos_x, node_map[it].pos_y));
+  }
+  emit ReturnPathVector(shortest_path_by_coordinate);
 }
 
 QVector<QVector<double>> CampusMap::BuildMatrix() {
