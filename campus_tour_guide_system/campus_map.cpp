@@ -28,16 +28,6 @@ void CampusMap::AddEdge(const QPair<double, double>& start,
   emit EdgeAdded(edge);
 }
 
-/*
-void CampusMap::AddInfo(const QString& name, const QString& description,
-                        const QString& pic_path) {
-  info_count++;
-  infos.emplaceBack(info_count, name, description, pic_path);
-  info_map[info_count] = {info_count, name, description, pic_path};
-  emit InfoAdded({info_count, name, description, pic_path});
-}
-*/
-
 void CampusMap::ReadNodeSlot(const Node& node) {
   nodes.push_back(node);
   node_map[node.id] = node;
@@ -149,14 +139,6 @@ void CampusMap::DeleteInfoSlot(int node_id) {
   emit InfoDeleted(info_id);
 }
 
-/*
-void CampusMap::ManageIdSend(double pre_x, double pre_y, double last_x,
-                             double last_y) {
-  GetNodeIdFromCoordinateSlot(pre_x, pre_y, -1);
-  GetNodeIdFromCoordinateSlot(last_x, last_y, -1);
-}
-*/
-
 void CampusMap::GetNodeIdFromCoordinateSlot(double pos_x, double pos_y,
                                             Sender sender) {
   QMap<int, Node>::const_iterator ci;
@@ -177,6 +159,16 @@ void CampusMap::GetInfoFromIdSlot(int id, Sender sender) {
   } else {
     emit InfoNotFound(sender);
   }
+}
+
+void CampusMap::GetSiteSlot(Sender sender) {
+  QVector<QPair<QPair<double, double>, QString>> sites;
+  for (const auto& it : nodes)
+    if (it.info_valid) {
+      QString name = info_map[it.info_id].name;
+      sites.append({{it.pos_x, it.pos_y}, name});
+    }
+  emit SitesFound(sites, sender);
 }
 
 void CampusMap::FindPath(int start, int end) {
@@ -247,6 +239,7 @@ QVector<int> CampusMap::FindShortestPath(
   return path;
 }
 
+/*
 QVector<QVector<int>> CampusMap::FindAllPaths(
     int start, int end, const QVector<QVector<double>>& matrix) {
   QVector<QVector<int>> allPaths;
@@ -254,6 +247,7 @@ QVector<QVector<int>> CampusMap::FindAllPaths(
   // dfs(start, end, matrix, path, allPaths);
   return allPaths;
 }
+*/
 
 void CampusMap::dfs(int current, int end,
                     const QVector<QVector<double>>& matrix, QVector<int>& path,

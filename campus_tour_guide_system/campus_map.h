@@ -28,37 +28,12 @@ class CampusMap : public QObject {
   explicit CampusMap(QObject* parent = nullptr);
 
   /**
-   * These Three functions are used to store new data during app execution,
+   * These Two functions are used to store new data during app execution,
    * which will send signal to DatabaseManager.
    */
   int AddNode(double pos_x, double pos_y);
   void AddEdge(const QPair<double, double>& start,
                const QPair<double, double>& end);
-  /*
-  void AddInfo(const QString& name, const QString& description,
-               const QString& pic_path);
-               */
-
-  /**
-   * The following six functions are used to get node content.
-   */
-  bool IsValid(int id);
-  double GetPosX(int id);
-  double GetPosY(int id);
-
-  /**
-   * The following three functions are used to get edge content.
-   */
-  int GetNodeOneId(int id);
-  int GetNodeTwoId(int id);
-  double GetLength(int id);
-
-  /**
-   * These three functions are used to get info content.
-   */
-  QString GetName(int id);
-  QString GetInfo(int id);
-  QString GetPicPath(int id);
 
   // 下面这一部分是用于路径查询的函数，第一个函数就是接口，直接调用该函数即可
 
@@ -76,13 +51,10 @@ class CampusMap : public QObject {
   QVector<int> FindShortestPath(int node_one_id, int node_two_id,
                                 const QVector<QVector<double>>& matrix);
   // 返回两个节点之间的所有路径
+  /*
   QVector<QVector<int>> FindAllPaths(int start, int end,
                                      const QVector<QVector<double>>& matrix);
-
- public slots:
-  // 用于接收起始和终点的坐标，并进行两次查询调用，每次发送一个坐标
-  // void ManageIdSend(double pre_x, double pre_y, double last_x, double
-  // last_y);
+                                     */
 
  private slots:
   /**
@@ -105,7 +77,7 @@ class CampusMap : public QObject {
    * and pos_y and emit the id of corresponding node.
    * @param pos_x x coordinate value
    * @param pos_y y coordinate value
-   * @param request_id a unique id to distinguish request sender
+   * @param sender the enum type of sender class
    */
   void GetNodeIdFromCoordinateSlot(double pos_x, double pos_y, Sender sender);
 
@@ -113,9 +85,16 @@ class CampusMap : public QObject {
    * @brief GetInfoFromIdSlot This function receives an id and emit the info
    * with this id.
    * @param id the id of requested info
-   * @param request_id a unique id to distinguish request sender
+   * @param sender the enum type of sender class
    */
   void GetInfoFromIdSlot(int id, Sender sender);
+
+  /**
+   * @brief GetSiteCoordinates This function receives a sender enum and emit a
+   * vector of coordinates and names of valid sites
+   * @param sender the enum type of sender class
+   */
+  void GetSiteSlot(Sender sender);
 
  private:
   QVector<Node> nodes;  // store site nodes
@@ -169,6 +148,9 @@ class CampusMap : public QObject {
 
   // 返回装有路径的vector
   void ReturnPathVector(QVector<int> route);
+
+  void SitesFound(QVector<QPair<QPair<double, double>, QString>> sites,
+                  Sender sender);
 };
 
 #endif  // CAMPUS_MAP_H
