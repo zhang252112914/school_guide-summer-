@@ -96,6 +96,8 @@ class CampusMap : public QObject {
    */
   void GetSiteSlot(Sender sender);
 
+  void SearchNodeSlot(double pos_x, double pos_y, Sender sender);
+
  private:
   QVector<Node> nodes;  // store site nodes
   QVector<Edge> edges;  // store edges
@@ -132,16 +134,26 @@ class CampusMap : public QObject {
    * @brief If GetNodeIdFromCoordinateSlot find corresponding node, IdFound
    * signal will be sent.
    * @param id the id found
-   * @param request_id the request id of sender
+   * @param sender the enum type of sender class
    */
   void IdFound(int id, Sender sender);
   void IdNotFound(Sender sender);
 
   /**
+   * @brief If SearchNodeSlot find corresponding node, NodeFound
+   * signal will be sent.
+   * @param pos_x the x coordinate of found node
+   * @param pos_y the y coordinate of found node
+   * @param sender the enum type of sender class
+   */
+  void NodeFound(double pos_x, double pos_y, Sender sender);
+  void NodeNotFound(Sender sender);
+
+  /**
    * @brief If GetInfoFromIdSlot find corresponding info, InfoFound
    * signal will be sent.
    * @param info the info found
-   * @param request_id the request id of sender
+   * @param sender the enum type of sender class
    */
   void InfoFound(const Info& info, Sender sender);
   void InfoNotFound(Sender sender);

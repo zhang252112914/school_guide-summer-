@@ -116,6 +116,8 @@ void CampusMap::EditInfoSlot(int node_id,
   info.name = info_pair["name"];
   info.description = info_pair["description"];
   info.pic_path = info_pair["pic_path"];
+
+  emit InfoEdited(info);
 }
 
 void CampusMap::DeleteInfoSlot(int node_id) {
@@ -169,6 +171,19 @@ void CampusMap::GetSiteSlot(Sender sender) {
       sites.append({{it.pos_x, it.pos_y}, name});
     }
   emit SitesFound(sites, sender);
+}
+
+void CampusMap::SearchNodeSlot(double pos_x, double pos_y, Sender sender) {
+  QMap<int, Node>::const_iterator ci;
+  for (ci = node_map.constBegin(); ci != node_map.constEnd(); ++ci) {
+    const auto& node = ci.value();
+    if (pow(node.pos_x - pos_x, 2) + pow(node.pos_y - pos_y, 2) <=
+        RADIUS * RADIUS) {
+      emit NodeFound(ci->pos_x, ci.pos_y, sender);
+      return;
+    }
+  }
+  emit NodeNotFound(sender);
 }
 
 void CampusMap::FindPath(int start, int end) {

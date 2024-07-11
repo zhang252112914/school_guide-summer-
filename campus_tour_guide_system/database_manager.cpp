@@ -18,7 +18,8 @@ DatabaseManager::DatabaseManager(const QString &path, QObject *parent)
       "CREATE TABLE IF NOT EXISTS nodes ("
       "id INTEGER PRIMARY KEY AUTOINCREMENT, "
       "pos_x REAL NOT NULL, "
-      "pos_y REAL NOT NULL)");
+      "pos_y REAL NOT NULL, "
+      "info_id INTEGER)");
   if (!success) {
     qDebug() << "Failed to create table:" << query.lastError().text();
   }
@@ -54,7 +55,7 @@ void DatabaseManager::DeserializeNodes() {
   }
 
   QSqlQuery query(db);
-  if (!query.prepare("SELECT id, pos_x, pos_y FROM nodes")) {
+  if (!query.prepare("SELECT id, pos_x, pos_y, info_id FROM nodes")) {
     qDebug() << "Query preparation failed:" << query.lastError().text();
     return;
   }
@@ -69,6 +70,11 @@ void DatabaseManager::DeserializeNodes() {
     node.id = query.value(0).toInt();
     node.pos_x = query.value(1).toDouble();
     node.pos_y = query.value(2).toDouble();
+    QVariant info_id = query.value(3);
+    if (!info_id.isNull()) {
+      node.info_id = info_id.toInt();
+      node.info_valid = true;
+    }
     emit NodeLoaded(node);  // emit signal
   }
 }
@@ -138,10 +144,13 @@ void DatabaseManager::SerializeNodeSlot(const Node &node) {
 
   QSqlQuery query;
   query.prepare(
-      "INSERT INTO nodes (id, pos_x, pos_y) VALUES (:id, :pos_x, :pos_y)");
+      "INSERT INTO nodes (id, pos_x, pos_y, info_id) VALUES (:id, :pos_x, "
+      ":pos_y, :info_id)");
   query.bindValue(":id", node.id);
   query.bindValue(":pos_x", node.pos_x);
   query.bindValue(":pos_y", node.pos_y);
+  query.bindValue(":info_id", node.info_valid ? QVariant(node.info_id)
+                                              : QVariant(QVariant::Int));
 
   if (!query.exec()) {
     qDebug() << "Error inserting data:" << query.lastError().text();
@@ -202,8 +211,8 @@ void DatabaseManager::UpdateInfoSlot(const Info &info) {
 
   QSqlQuery query;
   query.prepare(
-      "UPDATE infos SET id = :id, name = :name, description = :description, "
-      "pic_path = :pic_path");
+      "UPDATE infos SET name = :name, description = :description, "
+      "pic_path = :pic_path WHERE id = :id");
   query.bindValue(":id", info.id);
   query.bindValue(":name", info.name);
   query.bindValue(":description", info.description);
@@ -222,12 +231,36 @@ void DatabaseManager::DeleteInfoSlot(int id) {
     return;
   }
 
-  QSqlQuery query;
-  query.prepare("DELETE FROM infos WHERE id = :id");
-  query.bindValue(":id", id);
+  if (!db.transaction()) {
+    qDebug() << "Error: Unable to start transaction";
+    return;
+  }
 
-  if (!query.exec()) {
-    qDebug() << "Delete failed: " << query.lastError();
+  QSqlQuery nodes_query;
+  nodes_query.prepare(
+      "UPDATE nodes SET info_id = NULL WHERE info_id = :info_id");
+  nodes_query.bindValue(":info_id", id);
+
+  if (!nodes_query.exec()) {
+    qDebug() << "Update nodes failed: " << nodes_query.lastError();
+    db.rollback();
+    return;
+  }
+
+  QSqlQuery infos_query;
+  infos_query.prepare("DELETE FROM infos WHERE id = :id");
+  infos_query.bindValue(":id", id);
+
+  if (!infos_query.exec()) {
+    qDebug() << "Delete from infos failed: " << infos_query.lastError();
+    db.rollback();
+    return;
+  }
+
+  // Commit the transaction
+  if (!db.commit()) {
+    qDebug() << "Error: Unable to commit transaction";
+    db.rollback();
   } else {
     qDebug() << "Delete succeeded";
   }
