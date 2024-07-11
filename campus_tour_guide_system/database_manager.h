@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QMetaType>
 #include <QObject>
+#include <QSettings>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -24,7 +25,8 @@ class DatabaseManager : public QObject {
   Q_OBJECT
 
  public:
-  explicit DatabaseManager(const QString& path, QObject* parent = nullptr);
+  explicit DatabaseManager(const QString& config_file_path,
+                           QObject* parent = nullptr);
   ~DatabaseManager();
 
   /**
