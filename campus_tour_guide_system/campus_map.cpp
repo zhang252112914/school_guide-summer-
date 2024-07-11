@@ -179,7 +179,7 @@ void CampusMap::SearchNodeSlot(double pos_x, double pos_y, Sender sender) {
     const auto& node = ci.value();
     if (pow(node.pos_x - pos_x, 2) + pow(node.pos_y - pos_y, 2) <=
         RADIUS * RADIUS) {
-      emit NodeFound(ci->pos_x, ci.pos_y, sender);
+      emit NodeFound(ci->pos_x, ci->pos_y, sender);
       return;
     }
   }
