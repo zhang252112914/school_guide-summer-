@@ -1,6 +1,10 @@
 #ifndef VIEW_PAGE_H
 #define VIEW_PAGE_H
 
+#include <QMouseEvent>
+#include <QPair>
+#include <QString>
+#include <QVector>
 #include <QWidget>
 
 #include "graphics_display.h"
@@ -28,6 +32,10 @@ class ViewPage : public QWidget {
   void on_route_button_clicked();
   // 接受查询的结果并调用后端的查询函数
   void IdsReceiverAndFindCaller(int id, Sender sender);
+  void handleSitesFound(QVector<QPair<QPair<double, double>, QString>> sites,
+                        Sender sender);
+  void IdsReceiver(double x, double y, Sender sender);
+  void HandlePathVector(QVector<QPair<double, double>> route);
 
  private:
   Ui::ViewPage *view_page;
@@ -35,9 +43,11 @@ class ViewPage : public QWidget {
   double pre_clicked_x, pre_clicked_y;
   // 由于查询会有两个信号先后返回，所以要进行标记
   bool first_arrive = false, second_arrive = false;
+  bool point_arrive = false;
+  int point_id;
   int first_arrived_id, second_arrived_id;
   GraphicsDisplay *graphics_view;
-
+  CampusMap *campus_map;
  signals:
   void BackToMainPage();
   void AddNode(double pos_x, double pos_y);
@@ -45,6 +55,8 @@ class ViewPage : public QWidget {
   // 用于向campusmap发送查询请求，由相应的槽函数进行接受
   void IdRequest(double pos_x, double pos_y, Sender sender);
   void CallFindPath(int start, int end);
+  void requestSites(Sender sender);  // 用于请求站点信息的信号
+  void MyIdRequest(double pos_x, double pos_y, Sender sender);
 };
 
 #endif  // VIEW_PAGE_H

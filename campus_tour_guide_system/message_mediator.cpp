@@ -50,4 +50,24 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
           &CampusMap::GetNodeIdFromCoordinateSlot);
   connect(campus_map, &CampusMap::IdFound, view_page,
           &ViewPage::IdsReceiverAndFindCaller);
+
+  connect(view_page, &ViewPage::IdRequest, campus_map,
+          &CampusMap::GetNodeIdFromCoordinateSlot);
+  connect(campus_map, &CampusMap::IdFound, view_page,
+          &ViewPage::IdsReceiverAndFindCaller);
+  connect(
+      campus_map, &CampusMap::IdNotFound, view_page,
+      [view_page](Sender sender) { qDebug() << "No matching node found."; });
+
+  connect(campus_map, &CampusMap::SitesFound, view_page,
+          &ViewPage::handleSitesFound);
+  connect(view_page, &ViewPage::requestSites, campus_map,
+          &CampusMap::GetSiteSlot);
+  connect(campus_map, &CampusMap::NodeFound, view_page, &ViewPage::IdsReceiver);
+  connect(view_page, &ViewPage::MyIdRequest, campus_map,
+          &CampusMap::SearchNodeSlot);
+  connect(campus_map, &CampusMap::NodeNotFound, view_page,
+          [view_page](Sender sender) { qDebug() << "not matched"; });
+  connect(campus_map, &CampusMap::ReturnPathVector, view_page,
+          &ViewPage::HandlePathVector);
 }

@@ -180,6 +180,9 @@ void CampusMap::GetSiteSlot(Sender sender) {
       QString name = info_map[it.info_id].name;
       sites.append({{it.pos_x, it.pos_y}, name});
     }
+  if (sites.isEmpty()) {
+    qDebug() << "No valid sites to send.";
+  }
   emit SitesFound(sites, sender);
 }
 
