@@ -26,9 +26,24 @@ int main(int argc, char *argv[]) {
   HelpPage *help_page = new HelpPage();
 
   // DatabaseManager initialization
-  QString path = QDir::currentPath() + QDir::separator() + "my_database.db";
-  qDebug() << path;
-  DatabaseManager *db_manager = new DatabaseManager(path);
+  QDir dir;
+  QString path = QDir::homePath() + "/Documents/myapp/config";
+
+  if (!dir.exists(path)) {
+    if (!dir.mkpath(path)) {
+      qDebug() << "Failed to create directory:" << path;
+      return -1;
+    }
+  }
+
+  QString config_file_path = path + "/db_config.conf";
+  qDebug() << "Config file path:" << config_file_path;
+
+  QFile configFile(config_file_path);
+  if (!configFile.exists()) {
+    qDebug() << "Config file does not exist:" << config_file_path;
+  }
+  DatabaseManager *db_manager = new DatabaseManager(config_file_path);
 
   // CampusMap initialization
   CampusMap *campus_map = new CampusMap();

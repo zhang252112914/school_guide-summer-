@@ -1,9 +1,21 @@
 #include "database_manager.h"
 
-DatabaseManager::DatabaseManager(const QString &path, QObject *parent)
+DatabaseManager::DatabaseManager(const QString &config_file_path,
+                                 QObject *parent)
     : QObject{parent} {
-  db = QSqlDatabase::addDatabase("QSQLITE");
-  db.setDatabaseName(path);
+  db = QSqlDatabase::addDatabase("QMYSQL");
+  QSettings settings(config_file_path, QSettings::IniFormat);
+  QString hostname = settings.value("Database/Hostname").toString();
+  QString dbname = settings.value("Database/DatabaseName").toString();
+  QString username = settings.value("Database/Username").toString();
+  QString password = settings.value("Database/Password").toString();
+
+  qDebug() << hostname << dbname << username << password;
+
+  db.setHostName(hostname);
+  db.setDatabaseName(dbname);
+  db.setUserName(username);
+  db.setPassword(password);
 
   // Try to open database
   if (!db.open()) {
@@ -16,30 +28,30 @@ DatabaseManager::DatabaseManager(const QString &path, QObject *parent)
   QSqlQuery query;
   bool success = query.exec(
       "CREATE TABLE IF NOT EXISTS nodes ("
-      "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-      "pos_x REAL NOT NULL, "
-      "pos_y REAL NOT NULL, "
-      "info_id INTEGER)");
+      "id INT AUTO_INCREMENT PRIMARY KEY, "
+      "pos_x DOUBLE NOT NULL, "
+      "pos_y DOUBLE NOT NULL, "
+      "info_id INT)");
   if (!success) {
     qDebug() << "Failed to create table:" << query.lastError().text();
   }
 
   success = query.exec(
       "CREATE TABLE IF NOT EXISTS edges ("
-      "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-      "end_node_one_id INTEGER NOT NULL, "
-      "end_node_two_id INTEGER NOT NULL, "
-      "length REAL NOT NULL)");
+      "id INT AUTO_INCREMENT PRIMARY KEY, "
+      "end_node_one_id INT NOT NULL, "
+      "end_node_two_id INT NOT NULL, "
+      "length DOUBLE NOT NULL)");
   if (!success) {
     qDebug() << "Failed to create table:" << query.lastError().text();
   }
 
   success = query.exec(
       "CREATE TABLE IF NOT EXISTS infos ("
-      "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-      "name TEXT NOT NULL, "
+      "id INT AUTO_INCREMENT PRIMARY KEY, "
+      "name VARCHAR(255) NOT NULL, "
       "description TEXT NOT NULL, "
-      "pic_path TEXT NOT NULL)");
+      "pic_path VARCHAR(255) NOT NULL)");
   if (!success) {
     qDebug() << "Failed to create table:" << query.lastError().text();
   }
@@ -257,7 +269,6 @@ void DatabaseManager::DeleteInfoSlot(int id) {
     return;
   }
 
-  // Commit the transaction
   if (!db.commit()) {
     qDebug() << "Error: Unable to commit transaction";
     db.rollback();
