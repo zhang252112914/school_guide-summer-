@@ -1,7 +1,9 @@
 #include <QApplication>
 #include <QDebug>
 #include <QDir>
+#include <QFile>
 #include <QMetaType>
+#include <memory>
 
 #include "campus_map.h"
 #include "database_manager.h"
@@ -20,10 +22,11 @@ int main(int argc, char *argv[]) {
   qRegisterMetaType<Edge>("Edge");
   qRegisterMetaType<Info>("Info");
 
-  MainPage *main_page = new MainPage();
-  ViewPage *view_page = new ViewPage();
-  ManagePage *manage_page = new ManagePage();
-  HelpPage *help_page = new HelpPage();
+  // Create MainPage and other pages
+  auto main_page = std::make_unique<MainPage>();
+  auto view_page = std::make_unique<ViewPage>();
+  auto manage_page = std::make_unique<ManagePage>();
+  auto help_page = std::make_unique<HelpPage>();
 
   // DatabaseManager initialization
   QDir dir;
@@ -43,26 +46,32 @@ int main(int argc, char *argv[]) {
   if (!configFile.exists()) {
     qDebug() << "Config file does not exist:" << config_file_path;
   }
-  DatabaseManager *db_manager = new DatabaseManager(config_file_path);
+
+  auto db_manager = std::make_unique<DatabaseManager>(config_file_path);
+
+  if (!db_manager->IsOpen()) {
+    qDebug() << "Failed to open the database.";
+    return -1;
+  }
 
   // CampusMap initialization
-  CampusMap *campus_map = new CampusMap();
+  auto campus_map = std::make_unique<CampusMap>();
 
-  MessageMediator *message_mediator = new MessageMediator(
-      main_page, view_page, manage_page, help_page, db_manager, campus_map);
+  // MessageMediator initialization
+  auto message_mediator = std::make_unique<MessageMediator>(
+      main_page.get(), view_page.get(), manage_page.get(), help_page.get(),
+      db_manager.get(), campus_map.get());
 
+  // Deserialize data
   db_manager->DeserializeNodes();
   db_manager->DeserializeEdges();
   db_manager->DeserializeInfos();
 
+  // Show main page
   main_page->show();
+
   int return_value = a.exec();
-  delete campus_map;
-  delete db_manager;
-  delete message_mediator;
-  delete view_page;
-  delete manage_page;
-  delete help_page;
-  delete main_page;
+
+  // Smart pointers will automatically clean up
   return return_value;
 }

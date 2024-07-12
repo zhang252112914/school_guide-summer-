@@ -59,6 +59,8 @@ DatabaseManager::DatabaseManager(const QString &config_file_path,
 
 DatabaseManager::~DatabaseManager() { db.close(); }
 
+bool DatabaseManager::DatabaseManager::IsOpen() const { return db.isOpen(); }
+
 // Read data from database and translate its type to node, edge and info
 void DatabaseManager::DeserializeNodes() {
   if (!db.isOpen()) {

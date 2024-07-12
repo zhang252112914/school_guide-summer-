@@ -29,6 +29,8 @@ class DatabaseManager : public QObject {
                            QObject* parent = nullptr);
   ~DatabaseManager();
 
+  bool IsOpen() const;
+
   /**
    * These three functions are used to translate data stored in database to the
    * type stored in CampusMap object. The data transfer is implemented using
