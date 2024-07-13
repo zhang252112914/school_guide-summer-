@@ -4,6 +4,8 @@
 #include <QMessageBox>
 #include <QWidget>
 
+#include "graphics_display.h"
+
 namespace Ui {
 class AddSitePage;
 }
@@ -18,6 +20,7 @@ class AddSitePage : public QWidget {
 
  private:
   Ui::AddSitePage *add_site_page;
+  GraphicsDisplay *graph;
 
  signals:
   void BackToManagePage();
