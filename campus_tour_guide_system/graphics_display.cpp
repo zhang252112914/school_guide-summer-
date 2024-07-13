@@ -3,8 +3,7 @@
 GraphicsDisplay::GraphicsDisplay(QWidget *parent)
     : QGraphicsView(parent), scene(new QGraphicsScene(this)) {
   this->setScene(scene);
-  connect(campus_map, &CampusMap::SitesFound, my_graphics,
-          &GraphicsDisplay::DisplaySites);
+
   // Load the map image
   QPixmap map_pixmap(":/map.png");  // 加载图片
   QSize newSize(2500, 2000);        // 新的大小，自行设置
