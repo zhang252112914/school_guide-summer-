@@ -60,8 +60,8 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
       [view_page](Sender sender) { qDebug() << "No matching node found."; });
 
   connect(campus_map, &CampusMap::SitesFound, view_page,
-          &ViewPage::handleSitesFound);
-  connect(view_page, &ViewPage::requestSites, campus_map,
+          &ViewPage::HandleSitesFound);
+  connect(view_page, &ViewPage::RequestSites, campus_map,
           &CampusMap::GetSiteSlot);
   connect(campus_map, &CampusMap::NodeFound, view_page, &ViewPage::IdsReceiver);
   connect(view_page, &ViewPage::MyIdRequest, campus_map,
@@ -70,4 +70,5 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
           [view_page](Sender sender) { qDebug() << "not matched"; });
   connect(campus_map, &CampusMap::ReturnPathVector, view_page,
           &ViewPage::HandlePathVector);
+  // connect(campus_map,&CampusMap::InfoFound,);
 }

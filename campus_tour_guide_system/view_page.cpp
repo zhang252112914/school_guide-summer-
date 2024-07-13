@@ -19,7 +19,7 @@ void ViewPage::on_return_button_clicked() {
   emit BackToMainPage();
 }
 
-void ViewPage::handleSitesFound(
+void ViewPage::HandleSitesFound(
     QVector<QPair<QPair<double, double>, QString>> sites, Sender sender) {
   if (sites.isEmpty()) {
     qDebug() << "No sites found.";
@@ -81,7 +81,7 @@ void ViewPage::IdsReceiver(double x, double y, Sender sender) {
   GraphicsDisplay *graphics_view =
       qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
   if (graphics_view) {
-    graphics_view->addBlackPoint(x, y);
+    graphics_view->AddBlackPoint(x, y);
   }
 }
 
@@ -123,5 +123,5 @@ void ViewPage::IdsReceiverAndFindCaller(int id, Sender sender) {
 }
 
 void ViewPage::on_route_button_clicked() {
-  emit requestSites(Sender::VIEW_PAGE);
+  emit RequestSites(Sender::VIEW_PAGE);
 }
