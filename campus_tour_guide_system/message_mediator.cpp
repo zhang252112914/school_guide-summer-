@@ -85,6 +85,9 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
   connect(campus_map, &CampusMap::InfoFound, view_page, &ViewPage::DisplayInfo);
   connect(manage_page, &ManagePage::ShowAddEdgePage, add_edge_page,
           &AddEdgePage::show);
+  //在调用页面的同时触发绘图
+  connect(manage_page, &ManagePage::ShowAddSiteEdge, add_site_page,
+          &AddSitePage::PaintRequestWrapper);
   connect(manage_page, &ManagePage::ShowAddSiteEdge, add_site_page,
           &AddSitePage::show);
 
@@ -101,4 +104,8 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
           &AddSitePage::ModifyId);
   connect(campus_map, &CampusMap::IdNotFound, add_site_page,
           &AddSitePage::InvalidId);
+  connect(add_site_page, &AddSitePage::PaintRequest, campus_map,
+          &CampusMap::ReturnNodesToAddSitePage);
+  connect(campus_map, &CampusMap::NodesFeedBack, add_site_page,
+          &AddSitePage::PaintMap);
 }

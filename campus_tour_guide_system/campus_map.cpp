@@ -321,3 +321,5 @@ void CampusMap::dfs(int current, int end,
 
   path.removeLast();
 }
+
+void CampusMap::ReturnNodesToAddSitePage() { emit NodesFeedBack(nodes); }

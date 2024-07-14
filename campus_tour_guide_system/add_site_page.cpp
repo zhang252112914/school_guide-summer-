@@ -58,3 +58,11 @@ void AddSitePage::InvalidId(Sender sender) {
     id = -1;
   }
 }
+
+void AddSitePage::PaintMap(QVector<Node> nodes) {
+  qDebug() << "complete painting";
+  //红色表示是景点，黄色表示是普通节点
+  graph->PaintForAddSitePage(nodes);
+}
+
+void AddSitePage::PaintRequestWrapper() { emit PaintRequest(); }

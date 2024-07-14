@@ -82,6 +82,8 @@ class CampusMap : public QObject {
 
   // This function handles the ImageDataFetched signal sent by DatabaseManager.
   void HandleImageDataFetchedSlot(const QByteArray& image_data);
+  //给add_site_page返回所有用于绘图的节点的vector
+  void ReturnNodesToAddSitePage();
 
  private:
   /**
@@ -190,6 +192,7 @@ class CampusMap : public QObject {
                   Sender sender);
 
   void RequestImageData(int info_id);
+  void NodesFeedBack(QVector<Node> nodes);
 };
 
 #endif  // CAMPUS_MAP_H
