@@ -1,9 +1,8 @@
 #ifndef CAMPUS_MAP_H
 #define CAMPUS_MAP_H
 
-const double RADIUS = 10.0;
-
 #include <QDebug>
+#include <QImage>
 #include <QMap>
 #include <QObject>
 #include <QPair>
@@ -68,8 +67,10 @@ class CampusMap : public QObject {
   void ReadInfoSlot(const Info& info);
 
   void AddEdgeSlot(const QVector<QPair<double, double>>& coordinates);
-  void AddInfoSlot(int node_id, const QMap<QString, QString>& info_pair);
-  void EditInfoSlot(int node_id, const QMap<QString, QString>& info_pair);
+  void AddInfoSlot(int node_id, const QString& name, const QString& description,
+                   const QByteArray& image_data);
+  void EditInfoSlot(const Info& new_info, const QByteArray& image_data,
+                    const UpdateFlags& flags);
   void DeleteInfoSlot(int node_id);
 
   /**
@@ -79,7 +80,8 @@ class CampusMap : public QObject {
    * @param pos_y y coordinate value
    * @param sender the enum type of sender class
    */
-  void GetNodeIdFromCoordinateSlot(double pos_x, double pos_y, Sender sender);
+  // void GetNodeIdFromCoordinateSlot(double pos_x, double pos_y, Sender
+  // sender);
 
   /**
    * @brief GetInfoFromIdSlot This function receives an id and emit the info
@@ -87,7 +89,7 @@ class CampusMap : public QObject {
    * @param id the id of requested info
    * @param sender the enum type of sender class
    */
-  void GetInfoFromIdSlot(int id, Sender sender);
+  void GetInfoFromIdSlot(int info_id, Sender sender);
 
   /**
    * @brief GetSiteCoordinates This function receives a sender enum and emit a
@@ -97,6 +99,8 @@ class CampusMap : public QObject {
   void GetSiteSlot(Sender sender);
 
   void SearchNodeSlot(double pos_x, double pos_y, Sender sender);
+
+  void HandleImageDataFetchedSlot(const QByteArray& image_data);
 
  private:
   QVector<Node> nodes;  // store site nodes
@@ -120,14 +124,18 @@ class CampusMap : public QObject {
   int edge_count = 0;
   int info_count = 0;
 
+  int last_info_id;
+  Sender last_sender;
+
  signals:
   /**
    * Signals sent to DatabaseManager
    */
   void NodeAdded(const Node& node);
   void EdgeAdded(const Edge& edge);
-  void InfoAdded(const Info& info);
-  void InfoEdited(const Info& info);
+  void InfoAdded(const Info& info, const QByteArray& image_data);
+  void InfoEdited(const Info& info, const QByteArray& image_data,
+                  const UpdateFlags& flags);
   void InfoDeleted(int id);
 
   /**
@@ -136,8 +144,10 @@ class CampusMap : public QObject {
    * @param id the id found
    * @param sender the enum type of sender class
    */
+  /*
   void IdFound(int id, Sender sender);
   void IdNotFound(Sender sender);
+  */
 
   /**
    * @brief If SearchNodeSlot find corresponding node, NodeFound
@@ -146,7 +156,7 @@ class CampusMap : public QObject {
    * @param pos_y the y coordinate of found node
    * @param sender the enum type of sender class
    */
-  void NodeFound(double pos_x, double pos_y, Sender sender);
+  void NodeFound(const Node& node, Sender sender);
   void NodeNotFound(Sender sender);
 
   /**
@@ -155,7 +165,7 @@ class CampusMap : public QObject {
    * @param info the info found
    * @param sender the enum type of sender class
    */
-  void InfoFound(const Info& info, Sender sender);
+  void InfoFound(const Info& info, const QByteArray& image_data, Sender sender);
   void InfoNotFound(Sender sender);
 
   // 返回装有路径的vector
@@ -163,6 +173,8 @@ class CampusMap : public QObject {
 
   void SitesFound(QVector<QPair<QPair<double, double>, QString>> sites,
                   Sender sender);
+
+  void RequestImageData(int info_id);
 };
 
 #endif  // CAMPUS_MAP_H

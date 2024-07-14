@@ -51,7 +51,7 @@ DatabaseManager::DatabaseManager(const QString &config_file_path,
       "id INT AUTO_INCREMENT PRIMARY KEY, "
       "name VARCHAR(255) NOT NULL, "
       "description TEXT NOT NULL, "
-      "pic_path VARCHAR(255) NOT NULL)");
+      "image mediumblob NOT NULL)");
   if (!success) {
     qDebug() << "Failed to create table:" << query.lastError().text();
   }
@@ -128,7 +128,7 @@ void DatabaseManager::DeserializeInfos() {
   }
 
   QSqlQuery query(db);
-  if (!query.prepare("SELECT id, name, description, pic_path FROM infos")) {
+  if (!query.prepare("SELECT id, name, description FROM infos")) {
     qDebug() << "Query preparation failed:" << query.lastError().text();
     return;
   }
@@ -143,7 +143,6 @@ void DatabaseManager::DeserializeInfos() {
     info.id = query.value(0).toInt();
     info.name = query.value(1).toString();
     info.description = query.value(2).toString();
-    info.pic_path = query.value(3).toString();
 
     emit InfoLoaded(info);
   }
@@ -195,7 +194,8 @@ void DatabaseManager::SerializeEdgeSlot(const Edge &edge) {
   }
 }
 
-void DatabaseManager::SerializeInfoSlot(const Info &info) {
+void DatabaseManager::SerializeInfoSlot(const Info &info,
+                                        const QByteArray &image_data) {
   if (!db.isOpen()) {
     qDebug() << "Error: Database is not open";
     return;
@@ -203,12 +203,12 @@ void DatabaseManager::SerializeInfoSlot(const Info &info) {
 
   QSqlQuery query;
   query.prepare(
-      "INSERT INTO infos (id, name, description, pic_path) VALUES (:id, :name, "
-      ":description, :pic_path)");
+      "INSERT INTO infos (id, name, description, image) VALUES (:id, :name, "
+      ":description, :image_data)");
   query.bindValue(":id", info.id);
   query.bindValue(":name", info.name);
   query.bindValue(":description", info.description);
-  query.bindValue(":pic_path", info.pic_path);
+  query.bindValue(":image_data", image_data);
 
   if (!query.exec()) {
     qDebug() << "Error inserting data:" << query.lastError().text();
@@ -217,29 +217,42 @@ void DatabaseManager::SerializeInfoSlot(const Info &info) {
   }
 }
 
-void DatabaseManager::UpdateInfoSlot(const Info &info) {
+void DatabaseManager::UpdateInfoSlot(const Info &info,
+                                     const QByteArray &image_data,
+                                     const UpdateFlags &flags) {
   if (!db.isOpen()) {
     qDebug() << "Error: Database is not open";
     return;
   }
 
+  QStringList updates;
+  if (flags.update_name) updates.append("name = :name");
+  if (flags.update_description) updates.append("description = :description");
+  if (flags.update_image) updates.append("image = :image_data");
+
+  if (updates.isEmpty()) {
+    qDebug() << "No fields marked for update.";
+    return;
+  }
+
+  QString sql_update_query =
+      "UPDATE infos SET " + updates.join(", ") + " WHERE id = :id";
   QSqlQuery query;
-  query.prepare(
-      "UPDATE infos SET name = :name, description = :description, "
-      "pic_path = :pic_path WHERE id = :id");
+  query.prepare(sql_update_query);
   query.bindValue(":id", info.id);
-  query.bindValue(":name", info.name);
-  query.bindValue(":description", info.description);
-  query.bindValue(":pic_path", info.pic_path);
+  if (flags.update_name) query.bindValue(":name", info.name);
+  if (flags.update_description)
+    query.bindValue(":description", info.description);
+  if (flags.update_image) query.bindValue(":image_data", image_data);
 
   if (!query.exec()) {
-    qDebug() << "Update failed: " << query.lastError();
+    qDebug() << "Error updating data:" << query.lastError().text();
   } else {
-    qDebug() << "Update succeeded";
+    qDebug() << "Data updated successfully!";
   }
 }
 
-void DatabaseManager::DeleteInfoSlot(int id) {
+void DatabaseManager::DeleteInfoSlot(int info_id) {
   if (!db.isOpen()) {
     qDebug() << "Error: Database is not open";
     return;
@@ -253,20 +266,20 @@ void DatabaseManager::DeleteInfoSlot(int id) {
   QSqlQuery nodes_query;
   nodes_query.prepare(
       "UPDATE nodes SET info_id = NULL WHERE info_id = :info_id");
-  nodes_query.bindValue(":info_id", id);
+  nodes_query.bindValue(":info_id", info_id);
 
   if (!nodes_query.exec()) {
-    qDebug() << "Update nodes failed: " << nodes_query.lastError();
+    qDebug() << "Update nodes failed: " << nodes_query.lastError().text();
     db.rollback();
     return;
   }
 
   QSqlQuery infos_query;
   infos_query.prepare("DELETE FROM infos WHERE id = :id");
-  infos_query.bindValue(":id", id);
+  infos_query.bindValue(":id", info_id);
 
   if (!infos_query.exec()) {
-    qDebug() << "Delete from infos failed: " << infos_query.lastError();
+    qDebug() << "Delete from infos failed: " << infos_query.lastError().text();
     db.rollback();
     return;
   }
@@ -276,5 +289,24 @@ void DatabaseManager::DeleteInfoSlot(int id) {
     db.rollback();
   } else {
     qDebug() << "Delete succeeded";
+  }
+}
+
+void DatabaseManager::FetchImageData(int info_id) {
+  if (!db.isOpen()) {
+    qDebug() << "Database is not open";
+    return;
+  }
+
+  QSqlQuery query;
+  query.prepare("SELECT image FROM infos WHERE id = :id");
+  query.bindValue(":id", info_id);
+
+  QByteArray image_data;
+  if (query.exec() && query.next()) {
+    image_data = query.value(0).toByteArray();
+    emit ImageDataFetched(image_data);
+  } else {
+    qDebug() << "Failed to fetch image data:" << query.lastError().text();
   }
 }

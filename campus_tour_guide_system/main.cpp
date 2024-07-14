@@ -21,6 +21,7 @@ int main(int argc, char *argv[]) {
   qRegisterMetaType<Node>("Node");
   qRegisterMetaType<Edge>("Edge");
   qRegisterMetaType<Info>("Info");
+  qRegisterMetaType<UpdateFlags>("UpdateFlags");
 
   // Create MainPage and other pages
   auto main_page = std::make_unique<MainPage>();

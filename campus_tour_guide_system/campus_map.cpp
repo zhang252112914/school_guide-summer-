@@ -58,11 +58,16 @@ void CampusMap::AddEdgeSlot(const QVector<QPair<double, double>>& coordinates) {
   }
 }
 
-void CampusMap::AddInfoSlot(int node_id,
-                            const QMap<QString, QString>& info_pair) {
-  if (!info_pair.contains("name") || !info_pair.contains("description") ||
-      !info_pair.contains("pic_path")) {
-    qDebug() << "info_pair is missing one or more required keys.";
+void CampusMap::AddInfoSlot(int node_id, const QString& name,
+                            const QString& description,
+                            const QByteArray& image_data) {
+  if (name.isEmpty()) {
+    qDebug() << "Empty name";
+    return;
+  }
+
+  if (description.isEmpty()) {
+    qDebug() << "Empty description";
     return;
   }
 
@@ -78,46 +83,54 @@ void CampusMap::AddInfoSlot(int node_id,
     return;
   }
 
+  QImage image;
+  if (!image.loadFromData(image_data)) {
+    qDebug() << "The data is not a valid image";
+    return;
+  }
+
   node.info_id = ++info_count;
   node.info_valid = true;
 
-  QString name = info_pair["name"];
-  QString description = info_pair["description"];
-  QString pic_path = info_pair["pic_path"];
-
-  Info info(info_count, name, description, pic_path);
+  Info info(info_count, name, description);
 
   infos.append(info);
   info_map[info_count] = info;
-  emit InfoAdded(info);
+  emit InfoAdded(info, image_data);
 }
 
-void CampusMap::EditInfoSlot(int node_id,
-                             const QMap<QString, QString>& info_pair) {
-  if (!info_pair.contains("name") || !info_pair.contains("description") ||
-      !info_pair.contains("pic_path")) {
-    qDebug() << "info_pair is missing one or more required keys.";
+void CampusMap::EditInfoSlot(const Info& new_info, const QByteArray& image_data,
+                             const UpdateFlags& flags) {
+  if (!info_map.contains(new_info.id)) {
+    qDebug() << "Info ID" << new_info.id << "does not exist.";
     return;
   }
 
-  if (!node_map.contains(node_id)) {
-    qDebug() << "Node ID" << node_id << "does not exist.";
+  if (image_data.size() > MAX_SIZE) {
+    qDebug() << "image size exceeds 2MB limit";
     return;
   }
 
-  const Node& node = node_map[node_id];
+  Info& info = info_map[new_info.id];
 
-  if (!node.info_valid) {
-    qDebug() << "Site is not valid";
+  QStringList updates;
+  if (flags.update_name) {
+    info.name = new_info.name;
+    updates.append("name updated");
+  }
+  if (flags.update_description) {
+    info.description = new_info.description;
+    updates.append("description updated");
+  }
+  if (flags.update_image) {
+    updates.append("image_data updated");
+  }
+  if (updates.isEmpty()) {
+    qDebug() << "No fields marked for update.";
     return;
   }
 
-  Info& info = info_map[node.info_id];
-  info.name = info_pair["name"];
-  info.description = info_pair["description"];
-  info.pic_path = info_pair["pic_path"];
-
-  emit InfoEdited(info);
+  emit InfoEdited(new_info, image_data, flags);
 }
 
 void CampusMap::DeleteInfoSlot(int node_id) {
@@ -141,29 +154,18 @@ void CampusMap::DeleteInfoSlot(int node_id) {
   emit InfoDeleted(info_id);
 }
 
-void CampusMap::GetNodeIdFromCoordinateSlot(double pos_x, double pos_y,
-                                            Sender sender) {
-  QMap<int, Node>::const_iterator ci;
-  for (ci = node_map.constBegin(); ci != node_map.constEnd(); ++ci) {
-    auto& node = ci.value();
-    if (pow(node.pos_x - pos_x, 2) + pow(node.pos_y - pos_y, 2) <=
-        RADIUS * RADIUS) {
-      emit IdFound(ci.key(), sender);
-      return;
-    }
-  }
-  emit IdNotFound(sender);
-}
-
-void CampusMap::GetInfoFromIdSlot(int id, Sender sender) {
-  if (info_map.contains(id)) {
-    emit InfoFound(info_map[id], sender);
+void CampusMap::GetInfoFromIdSlot(int info_id, Sender sender) {
+  last_sender = sender;
+  if (info_map.contains(info_id)) {
+    last_info_id = info_id;
+    emit RequestImageData(info_id);
   } else {
     emit InfoNotFound(sender);
   }
 }
 
 void CampusMap::GetSiteSlot(Sender sender) {
+  last_sender = sender;
   QVector<QPair<QPair<double, double>, QString>> sites;
   for (const auto& it : nodes)
     if (it.info_valid) {
@@ -174,16 +176,21 @@ void CampusMap::GetSiteSlot(Sender sender) {
 }
 
 void CampusMap::SearchNodeSlot(double pos_x, double pos_y, Sender sender) {
+  last_sender = sender;
   QMap<int, Node>::const_iterator ci;
   for (ci = node_map.constBegin(); ci != node_map.constEnd(); ++ci) {
     const auto& node = ci.value();
     if (pow(node.pos_x - pos_x, 2) + pow(node.pos_y - pos_y, 2) <=
         RADIUS * RADIUS) {
-      emit NodeFound(ci->pos_x, ci->pos_y, sender);
+      emit NodeFound(*ci, sender);
       return;
     }
   }
   emit NodeNotFound(sender);
+}
+
+void CampusMap::HandleImageDataFetchedSlot(const QByteArray& image_data) {
+  emit InfoFound(info_map[last_info_id], image_data, last_sender);
 }
 
 void CampusMap::FindPath(int start, int end) {

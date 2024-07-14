@@ -1,6 +1,9 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+const double RADIUS = 10.0;
+const int MAX_SIZE = 2 * 1024 * 1024;
+
 #include <QMetaType>
 #include <QString>
 
@@ -32,15 +35,25 @@ struct Info {
   int id;
   QString name;
   QString description;
-  QString pic_path;
 
-  Info(int id = 0, const QString& name = "", const QString& description = "",
-       const QString& pic_path = "")
-      : id(id), name(name), description(description), pic_path(pic_path) {}
+  Info(int id = 0, const QString& name = "", const QString& description = "")
+      : id(id), name(name), description(description) {}
+};
+
+struct UpdateFlags {
+  bool update_name;
+  bool update_description;
+  bool update_image;
+
+  UpdateFlags(bool name = false, bool description = false, bool image = false)
+      : update_name(name),
+        update_description(description),
+        update_image(image) {}
 };
 
 Q_DECLARE_METATYPE(Node);
 Q_DECLARE_METATYPE(Edge);
 Q_DECLARE_METATYPE(Info);
+Q_DECLARE_METATYPE(UpdateFlags);
 
 #endif  // TYPES_H

@@ -46,10 +46,12 @@ class DatabaseManager : public QObject {
    */
   void SerializeNodeSlot(const Node& node);
   void SerializeEdgeSlot(const Edge& edge);
-  void SerializeInfoSlot(const Info& info);
+  void SerializeInfoSlot(const Info& info, const QByteArray& image_data);
 
-  void UpdateInfoSlot(const Info& info);
-  void DeleteInfoSlot(int id);
+  void UpdateInfoSlot(const Info& info, const QByteArray& image_data,
+                      const UpdateFlags& flags);
+  void DeleteInfoSlot(int info_id);
+  void FetchImageData(int info_id);
 
  private:
   QSqlDatabase db;
@@ -61,6 +63,7 @@ class DatabaseManager : public QObject {
   void NodeLoaded(const Node& node);
   void EdgeLoaded(const Edge& edge);
   void InfoLoaded(const Info& info);
+  void ImageDataFetched(const QByteArray& image_data);
 };
 
 #endif  // DATABASE_MANAGER_H

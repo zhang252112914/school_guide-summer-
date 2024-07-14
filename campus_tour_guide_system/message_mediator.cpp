@@ -23,6 +23,8 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
           &DatabaseManager::UpdateInfoSlot);
   connect(campus_map, &CampusMap::InfoDeleted, db_manager,
           &DatabaseManager::DeleteInfoSlot);
+  connect(campus_map, &CampusMap::RequestImageData, db_manager,
+          &DatabaseManager::FetchImageData);
 
   connect(db_manager, &DatabaseManager::NodeLoaded, campus_map,
           &CampusMap::ReadNodeSlot);
@@ -30,6 +32,8 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
           &CampusMap::ReadEdgeSlot);
   connect(db_manager, &DatabaseManager::InfoLoaded, campus_map,
           &CampusMap::ReadInfoSlot);
+  connect(db_manager, &DatabaseManager::ImageDataFetched, campus_map,
+          &CampusMap::HandleImageDataFetchedSlot);
 
   connect(view_page, &ViewPage::BackToMainPage, main_page, &MainPage::show);
   connect(manage_page, &ManagePage::BackToMainPage, main_page, &MainPage::show);
