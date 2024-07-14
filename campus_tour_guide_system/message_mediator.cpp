@@ -92,4 +92,13 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
           &ManagePage::show);
   connect(add_site_page, &AddSitePage::BackToManagePage, manage_page,
           &ManagePage::show);
+
+  // add_site_page的信号和槽
+  //下面两个connect都是针对add_site_page和campus_map之间关于id的交互
+  connect(add_site_page, &AddSitePage::TurnCoordinateToId, campus_map,
+          &CampusMap::GetNodeIdFromCoordinateSlot);
+  connect(campus_map, &CampusMap::IdFound, add_site_page,
+          &AddSitePage::ModifyId);
+  connect(campus_map, &CampusMap::IdNotFound, add_site_page,
+          &AddSitePage::InvalidId);
 }
