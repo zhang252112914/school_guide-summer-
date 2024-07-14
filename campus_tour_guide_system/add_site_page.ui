@@ -18,7 +18,7 @@
     <widget class="GraphicsDisplay" name="graph_view"/>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,1,4,1,2,3,2,2,2">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,1,4,1,8,2,2,2,2,2">
      <item>
       <spacer name="verticalSpacer_2">
        <property name="orientation">
@@ -53,7 +53,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QTextEdit" name="info_input"/>
+      <widget class="QTextEdit" name="description_input"/>
      </item>
      <item>
       <spacer name="verticalSpacer_4">
@@ -67,6 +67,13 @@
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="pic_label">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="add_picture_button">

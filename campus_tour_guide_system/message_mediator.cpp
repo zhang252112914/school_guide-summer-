@@ -108,4 +108,8 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
           &CampusMap::ReturnNodesToAddSitePage);
   connect(campus_map, &CampusMap::NodesFeedBack, add_site_page,
           &AddSitePage::PaintMap);
+
+  //用于景点信息查询的
+  connect(add_site_page, &AddSitePage::PresentInfoRequest, campus_map,
+          &CampusMap::GetInfoFromIdSlot);
 }
