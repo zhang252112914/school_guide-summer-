@@ -30,8 +30,8 @@ void AddSitePage::on_confirm_button_clicked() {
   QString info = add_site_page->info_input->toPlainText();
   QString pic_path = "";
   //只有在id有效的时候才会发送添加景点的信号
-  if (id != -1) {
-    emit MessageCollection(id, name, info, pic_path);
+  if (single_node.id != -1) {
+    emit MessageCollection(single_node, name, info, pic_path);
   }
   //反馈给用户一些信息,可能做出一个弹窗会更加合适
   else {
@@ -43,19 +43,19 @@ void AddSitePage::receive_one_node(double x, double y) {
   pos_x = x;
   pos_y = y;
   qDebug() << "Receive x and y:" << x << ":" << y;
-  emit TurnCoordinateToId(x, y);
+  emit CoordinateToNode(x, y);
 }
 
-void AddSitePage::ModifyId(int back_id, Sender sender) {
+void AddSitePage::ModifyNode(Node back_node, Sender sender) {
   if (sender == Sender::MANAGE_PAGE) {
-    id = back_id;
+    single_node = back_node;
   }
 }
 
-void AddSitePage::InvalidId(Sender sender) {
+void AddSitePage::InvalidNode(Sender sender) {
   if (sender == Sender::MANAGE_PAGE) {
     qDebug() << "useless click";
-    id = -1;
+    single_node.id = -1;
   }
 }
 

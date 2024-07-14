@@ -98,12 +98,12 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
 
   // add_site_page的信号和槽
   //下面两个connect都是针对add_site_page和campus_map之间关于id的交互
-  connect(add_site_page, &AddSitePage::TurnCoordinateToId, campus_map,
-          &CampusMap::GetNodeIdFromCoordinateSlot);
-  connect(campus_map, &CampusMap::IdFound, add_site_page,
-          &AddSitePage::ModifyId);
-  connect(campus_map, &CampusMap::IdNotFound, add_site_page,
-          &AddSitePage::InvalidId);
+  connect(add_site_page, &AddSitePage::CoordinateToNode, campus_map,
+          &CampusMap::SearchNodeSlot);
+  connect(campus_map, &CampusMap::NodeFound, add_site_page,
+          &AddSitePage::ModifyNode);
+  connect(campus_map, &CampusMap::NodeNotFound, add_site_page,
+          &AddSitePage::InvalidNode);
   connect(add_site_page, &AddSitePage::PaintRequest, campus_map,
           &CampusMap::ReturnNodesToAddSitePage);
   connect(campus_map, &CampusMap::NodesFeedBack, add_site_page,

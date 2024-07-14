@@ -32,24 +32,25 @@ class AddSitePage : public QWidget {
   GraphicsDisplay *graph;
   void receive_one_node(double x, double y);
   double pos_x, pos_y;
-  int id;
+  Node single_node;
 
  signals:
   void BackToManagePage();
   void AddNode();
   //根据获取到的信息及时更新add_site_page中的id，时刻为信息发送做准备
-  void TurnCoordinateToId(double x, double y, Sender s = Sender::MANAGE_PAGE);
+  void CoordinateToNode(double x, double y, Sender s = Sender::MANAGE_PAGE);
   //暂时没有考虑具体的照片传递方式，后面可以继续修改
   //这个函数用于向campusmap发送信息集合
-  void MessageCollection(int id, QString name, QString info, QString pic_path);
+  void MessageCollection(Node node, QString name, QString info,
+                         QString pic_path);
 
   //每次在初始化的时候都会发出绘制的请求
   void PaintRequest();
 
  private slots:
   //接收返回的id
-  void ModifyId(int back_id, Sender sender);
-  void InvalidId(Sender sender);
+  void ModifyNode(Node back_node, Sender sender);
+  void InvalidNode(Sender sender);
   void on_return_button_clicked();
   //点击按钮后收集页面上的所有信息并形成集合借助上面的信号进行发送
   void on_confirm_button_clicked();
