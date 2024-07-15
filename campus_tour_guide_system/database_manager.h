@@ -63,6 +63,7 @@ class DatabaseManager : public QObject {
   void NodeLoaded(const Node& node);
   void EdgeLoaded(const Edge& edge);
   void InfoLoaded(const Info& info);
+
   void ImageDataFetched(const QByteArray& image_data);
 };
 

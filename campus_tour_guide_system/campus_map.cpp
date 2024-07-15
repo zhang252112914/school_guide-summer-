@@ -83,6 +83,11 @@ void CampusMap::AddInfoSlot(int node_id, const QString& name,
     return;
   }
 
+  if (image_data.size() > MAX_SIZE) {
+    qDebug() << "image size exceeds 2MB limit";
+    return;
+  }
+
   QImage image;
   if (!image.loadFromData(image_data)) {
     qDebug() << "The data is not a valid image";
@@ -187,6 +192,18 @@ void CampusMap::SearchNodeSlot(double pos_x, double pos_y, Sender sender) {
     }
   }
   emit NodeNotFound(sender);
+}
+
+void CampusMap::GetEdgeSlot(Sender sender) {
+  QVector<QPair<QPair<double, double>, QPair<double, double>>> coordinate_pairs;
+  for (const auto& edge : edges) {
+    const Node& n1 = edge.end_node_one_id;
+    const Node& n2 = edge.end_node_two_id;
+    QPair<double, double> coord1 = qMakePair(n1.pos_x, n1.pos_y);
+    QPair<double, double> coord2 = qMakePair(n2.pos_x, n2.pos_y);
+    coordinate_pairs.append(qMakePair(coord1, coord2));
+  }
+  emit EdgesFound(coordinate_pairs, sender);
 }
 
 void CampusMap::HandleImageDataFetchedSlot(const QByteArray& image_data) {

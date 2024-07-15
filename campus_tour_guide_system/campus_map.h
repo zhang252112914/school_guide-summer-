@@ -98,8 +98,18 @@ class CampusMap : public QObject {
    */
   void GetSiteSlot(Sender sender);
 
+  /**
+   * @brief SearchNodeSlot This function recieves the coordinate clicked by
+   * mouse and search the node within a radius.
+   * @param pos_x the x coordinate of mouse clicked point
+   * @param pos_y the y coordinate of mouse clicked point
+   * @param sender the enum type of sender class
+   */
   void SearchNodeSlot(double pos_x, double pos_y, Sender sender);
 
+  void GetEdgeSlot(Sender sender);
+
+  // This function handles the ImageDataFetched signal sent by DatabaseManager.
   void HandleImageDataFetchedSlot(const QByteArray& image_data);
 
  private:
@@ -124,8 +134,8 @@ class CampusMap : public QObject {
   int edge_count = 0;
   int info_count = 0;
 
-  int last_info_id;
-  Sender last_sender;
+  int last_info_id;    // store the last info id when slot function invokes
+  Sender last_sender;  // store the last sender when slot function invokes
 
  signals:
   /**
@@ -136,7 +146,7 @@ class CampusMap : public QObject {
   void InfoAdded(const Info& info, const QByteArray& image_data);
   void InfoEdited(const Info& info, const QByteArray& image_data,
                   const UpdateFlags& flags);
-  void InfoDeleted(int id);
+  void InfoDeleted(int info_id);
 
   /**
    * @brief If GetNodeIdFromCoordinateSlot find corresponding node, IdFound
@@ -167,6 +177,11 @@ class CampusMap : public QObject {
    */
   void InfoFound(const Info& info, const QByteArray& image_data, Sender sender);
   void InfoNotFound(Sender sender);
+
+  void EdgesFound(
+      const QVector<QPair<QPair<double, double>, QPair<double, double>>>&
+          coordinate_pairs,
+      Sender sender);
 
   // 返回装有路径的vector
   void ReturnPathVector(QVector<QPair<double, double>> route);
