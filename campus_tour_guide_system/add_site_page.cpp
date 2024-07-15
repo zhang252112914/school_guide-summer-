@@ -17,6 +17,7 @@ AddSitePage::AddSitePage(QWidget* parent)
   add_site_page->name_input->setPlaceholderText("景点名称");
   add_site_page->description_input->setPlaceholderText("景点介绍");
   add_site_page->pic_label->setText("No picture");
+  image_changed = false;
 }
 
 AddSitePage::~AddSitePage() { delete add_site_page; }
@@ -27,11 +28,14 @@ void AddSitePage::on_return_button_clicked() {
 }
 
 void AddSitePage::on_cancel_button_clicked() {
+  add_site_page->name_input->clear();
   add_site_page->name_input->setPlaceholderText("景点名称");
+  add_site_page->description_input->clear();
   add_site_page->description_input->setPlaceholderText("景点介绍");
   add_site_page->pic_label->setText("No picture");
   image_data_container.clear();
   graph->DeletePointOfAddPage();
+  image_changed = false;
   qDebug() << "恢复";
 }
 
@@ -40,8 +44,16 @@ void AddSitePage::on_confirm_button_clicked() {
   QString description = add_site_page->description_input->toPlainText();
   //只有在id有效的时候才会发送添加景点的信号
   if (single_node.id != -1) {
-    emit MessageCollection(single_node.id, name, description,
-                           image_data_container);
+    //如果是新增加，则发送对应信号
+    if (!single_node.info_valid) {
+      emit AddMessageCollection(single_node.id, name, description,
+                                image_data_container);
+    } else {
+      Info new_info = {single_node.info_id, name, description};
+      emit EditMessageCollection(new_info, image_data_container,
+                                 {true, true, image_changed});
+    }
+    image_changed = false;
   }
   //反馈给用户一些信息,可能做出一个弹窗会更加合适
   else {

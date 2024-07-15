@@ -46,6 +46,7 @@ class AddSitePage : public QWidget {
   double pos_x, pos_y;
   Node single_node;
   QByteArray image_data_container;
+  bool image_changed;
 
  signals:
   void BackToManagePage();
@@ -54,8 +55,9 @@ class AddSitePage : public QWidget {
   void CoordinateToNode(double x, double y, Sender s = Sender::MANAGE_PAGE);
   //暂时没有考虑具体的照片传递方式，后面可以继续修改
   //这个函数用于向campusmap发送信息集合
-  void MessageCollection(int id, QString name, QString description,
-                         QByteArray image);
+  void AddMessageCollection(int id, QString name, QString description,
+                            QByteArray image);
+  void EditMessageCollection(Info new_info, QByteArray image_data, UpdateFlags);
 
   //每次在初始化的时候都会发出绘制的请求
   void PaintRequest();
