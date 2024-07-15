@@ -14,7 +14,7 @@ GraphicsDisplay::GraphicsDisplay(QWidget *parent)
   scene->addItem(map_item);
 
   // Set the scene size to the size of the map image
-  scene->setSceneRect(map_pixmap.rect());
+  scene->setSceneRect(map_item->boundingRect());
 
   // Ensure the whole image is visible
   this->fitInView(map_item, Qt::KeepAspectRatio);

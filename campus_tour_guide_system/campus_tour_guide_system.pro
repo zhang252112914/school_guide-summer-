@@ -14,7 +14,6 @@ SOURCES += \
     database_manager.cpp \
     graphics_display.cpp \
     help_page.cpp \
-    info_page.cpp \
     main.cpp \
     main_page.cpp \
     manage_page.cpp \
@@ -27,7 +26,6 @@ HEADERS += \
     database_manager.h \
     graphics_display.h \
     help_page.h \
-    info_page.h \
     main_page.h \
     manage_page.h \
     message_mediator.h \
@@ -38,7 +36,6 @@ HEADERS += \
 
 FORMS += \
     help_page.ui \
-    info_page.ui \
     main_page.ui \
     manage_page.ui \
     view_page.ui

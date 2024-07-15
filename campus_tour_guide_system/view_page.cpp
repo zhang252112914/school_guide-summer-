@@ -76,13 +76,13 @@ void ViewPage::HandlePointClicked(double x, double y) {
   // 请求坐标匹配
   emit MyIdRequest(x, y, Sender::VIEW_PAGE);
 }
-
-void ViewPage::IdsReceiver(double x, double y, Sender sender) {
+void ViewPage::IdsReceiver(const Node &node, Sender sender) {
   GraphicsDisplay *graphics_view =
       qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
   if (graphics_view) {
-    graphics_view->AddBlackPoint(x, y);
+    graphics_view->AddBlackPoint(node.pos_x, node.pos_y);
   }
+  emit MyInfoRequest(node.id, Sender::VIEW_PAGE);
 }
 
 void ViewPage::on_addnode_button_clicked() {
@@ -103,14 +103,14 @@ void ViewPage::on_clear_button_clicked() {
   }
 }
 
-void ViewPage::IdsReceiverAndFindCaller(int id, Sender sender) {
+void ViewPage::IdsReceiverAndFindCaller(const Node &node, Sender sender) {
   if (sender == Sender::VIEW_PAGE) {
     if (!first_arrive) {
-      first_arrived_id = id;
+      first_arrived_id = node.id;
       first_arrive = true;
       qDebug() << "id1 arrived";
     } else {
-      second_arrived_id = id;
+      second_arrived_id = node.id;
       second_arrive = true;
       qDebug() << "id2 arrived";
     }
@@ -124,4 +124,31 @@ void ViewPage::IdsReceiverAndFindCaller(int id, Sender sender) {
 
 void ViewPage::on_route_button_clicked() {
   emit RequestSites(Sender::VIEW_PAGE);
+}
+void ViewPage::displayInfo(const Info &info, const QByteArray &image_data,
+                           Sender sender) {
+  // 清除之前的图像和文本
+  view_page->info_graphics_view->scene()->clear();
+  view_page->text_edit->clear();
+  QGraphicsScene *scene = new QGraphicsScene(this);
+  view_page->info_graphics_view->setScene(scene);
+  QPixmap image;
+  if (!image_data.isEmpty()) {
+    if (!image.loadFromData(image_data)) {
+      qDebug() << "Unable to load image from data.";
+    }
+  }
+
+  if (!image.isNull()) {
+    scene->addPixmap(image.scaled(view_page->info_graphics_view->size(),
+                                  Qt::KeepAspectRatio,
+                                  Qt::SmoothTransformation));
+  } else {
+    qDebug() << "No image data provided.";
+  }
+
+  // 显示名称和描述
+  QString text =
+      QString("Name: %1\nDescription: %2").arg(info.name, info.description);
+  view_page->text_edit->setText(text);
 }

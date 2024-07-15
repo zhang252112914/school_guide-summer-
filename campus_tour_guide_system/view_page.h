@@ -1,6 +1,7 @@
 #ifndef VIEW_PAGE_H
 #define VIEW_PAGE_H
 
+#include <QByteArray>
 #include <QMouseEvent>
 #include <QPair>
 #include <QString>
@@ -9,6 +10,7 @@
 
 #include "graphics_display.h"
 #include "sender_enum.h"
+#include "types.h"
 
 namespace Ui {
 class ViewPage;
@@ -21,6 +23,8 @@ class ViewPage : public QWidget {
  public:
   explicit ViewPage(QWidget *parent = nullptr);
   ~ViewPage();
+  void displayInfo(const Info &info, const QByteArray &image_data,
+                   Sender sender);
 
  protected:
   void resizeEvent(QResizeEvent *event) override;
@@ -31,10 +35,10 @@ class ViewPage : public QWidget {
   void on_clear_button_clicked();
   void on_route_button_clicked();
   // 接受查询的结果并调用后端的查询函数
-  void IdsReceiverAndFindCaller(int id, Sender sender);
+  void IdsReceiverAndFindCaller(const Node &node, Sender sender);
   void HandleSitesFound(QVector<QPair<QPair<double, double>, QString>> sites,
                         Sender sender);
-  void IdsReceiver(double x, double y, Sender sender);
+  void IdsReceiver(const Node &node, Sender sender);
   void HandlePathVector(QVector<QPair<double, double>> route);
 
  private:
@@ -57,6 +61,7 @@ class ViewPage : public QWidget {
   void CallFindPath(int start, int end);
   void RequestSites(Sender sender);  // 用于请求站点信息的信号
   void MyIdRequest(double pos_x, double pos_y, Sender sender);
+  void MyInfoRequest(int info_id, Sender sender);
 };
 
 #endif  // VIEW_PAGE_H
