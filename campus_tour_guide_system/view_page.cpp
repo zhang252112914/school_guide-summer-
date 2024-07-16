@@ -125,7 +125,8 @@ void ViewPage::IdsReceiverAndFindCaller(const Node &node, Sender sender) {
 void ViewPage::on_route_button_clicked() {
   emit RequestSites(Sender::VIEW_PAGE);
 }
-void ViewPage::displayInfo(const Info &info, const QByteArray &image_data,
+/*
+void ViewPage::DisplayInfo(const Info &info, const QByteArray &image_data,
                            Sender sender) {
   // 清除之前的图像和文本
   view_page->info_graphics_view->scene()->clear();
@@ -143,6 +144,36 @@ void ViewPage::displayInfo(const Info &info, const QByteArray &image_data,
     scene->addPixmap(image.scaled(view_page->info_graphics_view->size(),
                                   Qt::KeepAspectRatio,
                                   Qt::SmoothTransformation));
+  } else {
+    qDebug() << "No image data provided.";
+  }
+
+  // 显示名称和描述
+  QString text =
+      QString("Name: %1\nDescription: %2").arg(info.name, info.description);
+  view_page->text_edit->setText(text);
+}*/
+void ViewPage::DisplayInfo(const Info &info, const QByteArray &image_data,
+                           Sender sender) {
+  // 清除之前的图像和文本
+  if (view_page->info_graphics_view->scene()) {
+    view_page->info_graphics_view->scene()->clear();
+  } else {
+    QGraphicsScene *scene = new QGraphicsScene(this);
+    view_page->info_graphics_view->setScene(scene);
+  }
+
+  QPixmap image;
+  if (!image_data.isEmpty()) {
+    if (image.loadFromData(image_data)) {
+      // 图片加载成功，根据 QGraphicsView 的大小调整图片大小
+      QGraphicsScene *scene = view_page->info_graphics_view->scene();
+      scene->addPixmap(image.scaled(view_page->info_graphics_view->size(),
+                                    Qt::IgnoreAspectRatio,  // 改为忽略宽高比
+                                    Qt::SmoothTransformation));  // 保持平滑转换
+    } else {
+      qDebug() << "Unable to load image from data.";
+    }
   } else {
     qDebug() << "No image data provided.";
   }

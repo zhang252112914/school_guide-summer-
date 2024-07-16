@@ -5,6 +5,7 @@ GraphicsDisplay::GraphicsDisplay(QWidget *parent)
   this->setScene(scene);
   connect(campus_map, &CampusMap::SitesFound, my_graphics,
           &GraphicsDisplay::DisplaySites);
+
   // Load the map image
   QPixmap map_pixmap(":/map.png");  // 加载图片
   QSize newSize(2500, 2000);        // 新的大小，自行设置
@@ -16,7 +17,7 @@ GraphicsDisplay::GraphicsDisplay(QWidget *parent)
   // Set the scene size to the size of the map image
   scene->setSceneRect(map_item->boundingRect());
 
-  // Ensure the whole image is visible
+  // Ensure the whole image is visible initially
   this->fitInView(map_item, Qt::KeepAspectRatio);
 
   // Optionally, disable scrollbars if you want the view to be fixed
@@ -32,26 +33,31 @@ void GraphicsDisplay::FitViewToScene() {
   }
 }
 
+void GraphicsDisplay::resizeEvent(QResizeEvent *event) {
+  QGraphicsView::resizeEvent(event);
+  FitViewToScene();
+}
+
 void GraphicsDisplay::ClearPoints() {
   /*
-  for (auto point : points) {
-      scene->removeItem(point);
-      delete point;
-  }
-  points.clear();
+for (auto point : points) {
+  scene->removeItem(point);
+  delete point;
+}
+points.clear();
 
-  // 删除所有标签
-  for (auto label : labels) {
-      scene->removeItem(label);
-      delete label;
-  }
-  labels.clear();*/
+// 删除所有标签
+for (auto label : labels) {
+  scene->removeItem(label);
+  delete label;
+}
+labels.clear();*/
   // 删除所有线条
-  for (auto *point : black_points) {
+  for (auto *point : blackPoints) {
     scene->removeItem(point);
     delete point;
   }
-  black_points.clear();
+  blackPoints.clear();
 
   // 强制刷新视图
 
@@ -62,29 +68,29 @@ void GraphicsDisplay::ClearPoints() {
 void GraphicsDisplay::AddPoint(double x, double y) {
   QGraphicsEllipseItem *point =
       scene->addEllipse(x - 5, y - 5, 10, 10, QPen(Qt::blue), QBrush(Qt::blue));
-  blue_points.append(point);  // 添加到蓝色点的容器
+  bluePoints.append(point);  // 添加到蓝色点的容器
   scene->update();
   this->viewport()->update();
 }
 void GraphicsDisplay::ConnectPoints() {
-  if (blue_points.size() < 2) {
+  if (bluePoints.size() < 2) {
     qDebug() << "Not enough points to connect.";
     return;
   }
-  for (int i = 0; i < blue_points.size() - 1; i++) {
-    QPointF p1 = blue_points[i]->rect().center();
-    QPointF p2 = blue_points[i + 1]->rect().center();
+  for (int i = 0; i < bluePoints.size() - 1; i++) {
+    QPointF p1 = bluePoints[i]->rect().center();
+    QPointF p2 = bluePoints[i + 1]->rect().center();
     QGraphicsLineItem *line = scene->addLine(QLineF(p1, p2), QPen(Qt::blue, 2));
     lines.append(line);
   }
 }
 
 void GraphicsDisplay::ClearBluePoints() {
-  for (auto point : blue_points) {
+  for (auto point : bluePoints) {
     scene->removeItem(point);
     delete point;
   }
-  blue_points.clear();
+  bluePoints.clear();
   // 清除线条
   for (auto line : lines) {
     scene->removeItem(line);
@@ -113,20 +119,20 @@ void GraphicsDisplay::DisplaySites(
   for (const auto &site : sites) {
     double x = site.first.first;
     double y = site.first.second;
-    const QString &label_text = site.second;
+    const QString &labelText = site.second;
 
-    AddPoint(x, y, label_text);
+    AddPoint(x, y, labelText);
   }
 }
 
-void GraphicsDisplay::AddPoint(int x, int y, const QString &label_text) {
+void GraphicsDisplay::AddPoint(int x, int y, const QString &labelText) {
   // 创建一个点
   QGraphicsEllipseItem *point =
       scene->addEllipse(x - 5, y - 5, 10, 10, QPen(Qt::red), QBrush(Qt::red));
   points.append(point);
 
   // 创建一个标签
-  QGraphicsTextItem *label = scene->addText(label_text);
+  QGraphicsTextItem *label = scene->addText(labelText);
   label->setDefaultTextColor(Qt::red);
   label->setPos(x + 10, y - 10);
   labels.append(label);
@@ -146,14 +152,48 @@ void GraphicsDisplay::DisplayPoint(double x, double y, bool matched) {
 }
 
 void GraphicsDisplay::AddBlackPoint(double x, double y) {
-  if (black_points.size() >= maxblack_points) {  // 如果已达到或超过最大点数限制
+  if (blackPoints.size() >= maxBlackPoints) {  // 如果已达到或超过最大点数限制
     // 移除最早添加的点
-    QGraphicsEllipseItem *oldestPoint = black_points.takeFirst();
+    QGraphicsEllipseItem *oldestPoint = blackPoints.takeFirst();
     scene->removeItem(oldestPoint);
     delete oldestPoint;
   }
   // 添加新的黑色点
   QGraphicsEllipseItem *point = scene->addEllipse(
       x - 5, y - 5, 10, 10, QPen(Qt::black), QBrush(Qt::black));
-  black_points.append(point);
+  blackPoints.append(point);
+}
+
+void GraphicsDisplay::PaintForAddSitePage(QVector<Node> nodes) {
+  for (auto it : nodes) {
+    QGraphicsEllipseItem *point = nullptr;
+    if (it.info_valid) {
+      // 是一个景点
+      point = scene->addEllipse(it.pos_x - 5, it.pos_y - 5, 10, 10,
+                                QPen(Qt::red), QBrush(Qt::red));
+    } else {
+      // 普通节点
+      point = scene->addEllipse(it.pos_x - 5, it.pos_y - 5, 10, 10,
+                                QPen(Qt::yellow), QBrush(Qt::yellow));
+    }
+    bluePoints.append(point);  // 就放在蓝色容器吧，只有add_site_page这么做
+    scene->update();
+    this->viewport()->update();
+  }
+}
+
+void GraphicsDisplay::PaintBluePoint(Node node) {
+  QGraphicsEllipseItem *ptr = scene->addEllipse(
+      node.pos_x - 5, node.pos_y - 5, 10, 10, QPen(Qt::blue), QBrush(Qt::blue));
+  scene->update();
+  this->viewport()->update();
+  blackPoints.append(ptr);
+}
+
+void GraphicsDisplay::DeletePointOfAddPage() {
+  if (!blackPoints.empty()) {
+    scene->removeItem(blackPoints[0]);
+    delete blackPoints[0];
+    blackPoints.clear();
+  }
 }

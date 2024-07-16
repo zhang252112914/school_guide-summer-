@@ -23,7 +23,7 @@ class ViewPage : public QWidget {
  public:
   explicit ViewPage(QWidget *parent = nullptr);
   ~ViewPage();
-  void displayInfo(const Info &info, const QByteArray &image_data,
+  void DisplayInfo(const Info &info, const QByteArray &image_data,
                    Sender sender);
 
  protected:

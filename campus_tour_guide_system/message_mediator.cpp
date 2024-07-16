@@ -65,7 +65,7 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
           [view_page](Sender sender) { qDebug() << "not matched"; });
   connect(campus_map, &CampusMap::ReturnPathVector, view_page,
           &ViewPage::HandlePathVector);
-  connect(campus_map, &CampusMap::InfoFound, view_page, &ViewPage::displayInfo);
+  connect(campus_map, &CampusMap::InfoFound, view_page, &ViewPage::DisplayInfo);
   connect(view_page, &ViewPage::MyInfoRequest, campus_map,
           &CampusMap::GetInfoFromIdSlot);
 }
