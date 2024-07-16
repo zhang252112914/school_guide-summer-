@@ -159,6 +159,14 @@ void CampusMap::DeleteInfoSlot(int node_id) {
   emit InfoDeleted(info_id);
 }
 
+/*
+void CampusMap::ManageIdSend(double pre_x, double pre_y, double last_x,
+                             double last_y) {
+  GetNodeIdFromCoordinateSlot(pre_x, pre_y, -1);
+  GetNodeIdFromCoordinateSlot(last_x, last_y, -1);
+}
+*/
+
 void CampusMap::GetInfoFromIdSlot(int info_id, Sender sender) {
   last_sender = sender;
   if (info_map.contains(info_id)) {
@@ -177,6 +185,9 @@ void CampusMap::GetSiteSlot(Sender sender) {
       QString name = info_map[it.info_id].name;
       sites.append({{it.pos_x, it.pos_y}, name});
     }
+  if (sites.isEmpty()) {
+    qDebug() << "No valid sites to send.";
+  }
   emit SitesFound(sites, sender);
 }
 
