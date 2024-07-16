@@ -112,10 +112,14 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
   //用于景点信息查询的
   connect(add_site_page, &AddSitePage::PresentInfoRequest, campus_map,
           &CampusMap::GetInfoFromIdSlot);
+  connect(campus_map, &CampusMap::InfoFound, add_site_page,
+          &AddSitePage::PresentInfo);
 
   //添加或修改节点的
   connect(add_site_page, &AddSitePage::AddMessageCollection, campus_map,
           &CampusMap::AddInfoSlot);
   connect(add_site_page, &AddSitePage::EditMessageCollection, campus_map,
           &CampusMap::EditInfoSlot);
+  connect(manage_page, &ManagePage::ShowAddEdgePage, add_site_page,
+          &AddSitePage::PaintRequestWrapper);
 }

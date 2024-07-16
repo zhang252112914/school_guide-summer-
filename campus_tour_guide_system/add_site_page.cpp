@@ -43,15 +43,18 @@ void AddSitePage::on_confirm_button_clicked() {
   QString name = add_site_page->name_input->text();
   QString description = add_site_page->description_input->toPlainText();
   //只有在id有效的时候才会发送添加景点的信号
+  qDebug() << name << '\n' << description;
   if (single_node.id != -1) {
     //如果是新增加，则发送对应信号
     if (!single_node.info_valid) {
       emit AddMessageCollection(single_node.id, name, description,
                                 image_data_container);
+      qDebug() << "didn't do";
     } else {
       Info new_info = {single_node.info_id, name, description};
       emit EditMessageCollection(new_info, image_data_container,
                                  {true, true, image_changed});
+      qDebug() << "do";
     }
     image_changed = false;
   }
@@ -59,6 +62,7 @@ void AddSitePage::on_confirm_button_clicked() {
   else {
     qDebug() << "The node you select is invalid";
   }
+  single_node.id = -1;
   //恢复原状
   on_cancel_button_clicked();
 }
