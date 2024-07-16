@@ -152,7 +152,7 @@ void GraphicsDisplay::DisplayPoint(double x, double y, bool matched) {
 }
 
 void GraphicsDisplay::AddBlackPoint(double x, double y) {
-  if (blackPoints.size() >= maxBlackPoints) {  // 如果已达到或超过最大点数限制
+  if (blackPoints.size() > maxBlackPoints) {  // 如果已达到或超过最大点数限制
     // 移除最早添加的点
     QGraphicsEllipseItem *oldestPoint = blackPoints.takeFirst();
     scene->removeItem(oldestPoint);

@@ -79,6 +79,9 @@ void ViewPage::HandlePointClicked(double x, double y) {
 void ViewPage::IdsReceiver(const Node &node, Sender sender) {
   GraphicsDisplay *graphics_view =
       qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
+  if (!node.info_valid) {
+    return;
+  }
   if (graphics_view) {
     graphics_view->AddBlackPoint(node.pos_x, node.pos_y);
   }
@@ -105,6 +108,9 @@ void ViewPage::on_clear_button_clicked() {
 
 void ViewPage::IdsReceiverAndFindCaller(const Node &node, Sender sender) {
   if (sender == Sender::VIEW_PAGE) {
+    if (!node.info_valid) {
+      return;
+    }
     if (!first_arrive) {
       first_arrived_id = node.id;
       first_arrive = true;
