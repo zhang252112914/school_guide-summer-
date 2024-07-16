@@ -46,7 +46,8 @@ class DatabaseManager : public QObject {
    */
   void SerializeNodeSlot(const Node& node);
   void SerializeEdgeSlot(const Edge& edge);
-  void SerializeInfoSlot(const Info& info, const QByteArray& image_data);
+  void SerializeInfoSlot(int node_id, const Info& info,
+                         const QByteArray& image_data);
 
   void UpdateInfoSlot(const Info& info, const QByteArray& image_data,
                       const UpdateFlags& flags);

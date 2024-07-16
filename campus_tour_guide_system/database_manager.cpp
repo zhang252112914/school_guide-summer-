@@ -194,24 +194,34 @@ void DatabaseManager::SerializeEdgeSlot(const Edge &edge) {
   }
 }
 
-void DatabaseManager::SerializeInfoSlot(const Info &info,
+void DatabaseManager::SerializeInfoSlot(int node_id, const Info &info,
                                         const QByteArray &image_data) {
   if (!db.isOpen()) {
     qDebug() << "Error: Database is not open";
     return;
   }
 
-  QSqlQuery query;
-  query.prepare(
+  QSqlQuery info_query;
+  info_query.prepare(
       "INSERT INTO infos (id, name, description, image) VALUES (:id, :name, "
       ":description, :image_data)");
-  query.bindValue(":id", info.id);
-  query.bindValue(":name", info.name);
-  query.bindValue(":description", info.description);
-  query.bindValue(":image_data", image_data);
+  info_query.bindValue(":id", info.id);
+  info_query.bindValue(":name", info.name);
+  info_query.bindValue(":description", info.description);
+  info_query.bindValue(":image_data", image_data);
 
-  if (!query.exec()) {
-    qDebug() << "Error inserting data:" << query.lastError().text();
+  if (!info_query.exec()) {
+    qDebug() << "Error inserting info data:" << info_query.lastError().text();
+    return;
+  }
+
+  QSqlQuery node_query;
+  node_query.prepare("UPDATE nodes SET info_id = :info_id WHERE id = :id");
+  node_query.bindValue(":info_id", info.id);
+  node_query.bindValue(":id", node_id);
+
+  if (!node_query.exec()) {
+    qDebug() << "Error inserting info data:" << node_query.lastError().text();
   } else {
     qDebug() << "Data inserted successfully!";
   }

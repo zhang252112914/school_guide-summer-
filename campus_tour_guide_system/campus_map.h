@@ -143,7 +143,7 @@ class CampusMap : public QObject {
    */
   void NodeAdded(const Node& node);
   void EdgeAdded(const Edge& edge);
-  void InfoAdded(const Info& info, const QByteArray& image_data);
+  void InfoAdded(int node_id, const Info& info, const QByteArray& image_data);
   void InfoEdited(const Info& info, const QByteArray& image_data,
                   const UpdateFlags& flags);
   void InfoDeleted(int info_id);

@@ -101,7 +101,7 @@ void CampusMap::AddInfoSlot(int node_id, const QString& name,
 
   infos.append(info);
   info_map[info_count] = info;
-  emit InfoAdded(info, image_data);
+  emit InfoAdded(node_id, info, image_data);
 }
 
 void CampusMap::EditInfoSlot(const Info& new_info, const QByteArray& image_data,
