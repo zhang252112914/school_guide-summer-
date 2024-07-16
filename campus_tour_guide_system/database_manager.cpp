@@ -10,8 +10,6 @@ DatabaseManager::DatabaseManager(const QString &config_file_path,
   QString username = settings.value("Database/Username").toString();
   QString password = settings.value("Database/Password").toString();
 
-  qDebug() << hostname << dbname << username << password;
-
   db.setHostName(hostname);
   db.setDatabaseName(dbname);
   db.setUserName(username);

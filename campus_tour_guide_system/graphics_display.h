@@ -38,8 +38,6 @@ class GraphicsDisplay : public QGraphicsView {
   void DeletePointOfAddPage();
 
  public slots:
-  void DisplaySites(
-      const QVector<QPair<QPair<double, double>, QString>> &sites);
   void DisplayPoint(double x, double y, bool matched);
 
  private:

@@ -50,8 +50,8 @@ class ViewPage : public QWidget {
   bool point_arrive = false;
   int point_id;
   int first_arrived_id, second_arrived_id;
-  GraphicsDisplay *graphics_view;
-  CampusMap *campus_map;
+  GraphicsDisplay *graphics_display;
+
  signals:
   void BackToMainPage();
   void AddNode(double pos_x, double pos_y);

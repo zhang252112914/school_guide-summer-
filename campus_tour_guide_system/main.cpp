@@ -41,7 +41,6 @@ int main(int argc, char *argv[]) {
   }
 
   QString config_file_path = path + "/db_config.conf";
-  qDebug() << "Config file path:" << config_file_path;
 
   QFile configFile(config_file_path);
   if (!configFile.exists()) {

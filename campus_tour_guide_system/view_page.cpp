@@ -5,10 +5,16 @@
 ViewPage::ViewPage(QWidget *parent)
     : QWidget(parent), view_page(new Ui::ViewPage) {
   view_page->setupUi(this);
-  graphics_view = qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
-  if (graphics_view) {
-    connect(graphics_view, &GraphicsDisplay::PointClicked, this,
+  graphics_display =
+      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
+  if (graphics_display) {
+    connect(graphics_display, &GraphicsDisplay::PointClicked, this,
             &ViewPage::HandlePointClicked);
+    bool connected = connect(graphics_display, &GraphicsDisplay::PointClicked,
+                             this, &ViewPage::HandlePointClicked);
+    if (!connected) {
+      qDebug() << "Connection failed!";
+    }
   }
 }
 
@@ -21,88 +27,97 @@ void ViewPage::on_return_button_clicked() {
 
 void ViewPage::HandleSitesFound(
     QVector<QPair<QPair<double, double>, QString>> sites, Sender sender) {
+  if (sender != Sender::VIEW_PAGE) {
+    return;
+  }
   if (sites.isEmpty()) {
     qDebug() << "No sites found.";
   }
+  GraphicsDisplay *graphics_display =
+      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
+  graphics_display->ClearPoints();
   for (const auto &site : sites) {
     qDebug() << "Site position: " << site.first.first << ", "
              << site.first.second << " with name: " << site.second;
     double x = site.first.first;
     double y = site.first.second;
     const QString &label = site.second;
-    graphics_view->AddPoint(x, y, label);
+    graphics_display->AddPoint(x, y, label);
   }
   qDebug() << "do ";
 }
 
 void ViewPage::HandlePathVector(QVector<QPair<double, double>> route) {
-  GraphicsDisplay *graphicsView =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
-  graphicsView->ClearBluePoints();
+  GraphicsDisplay *graphics_display =
+      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
+  graphics_display->ClearBluePoints();
   if (route.isEmpty()) {
     qDebug() << "no path found";
   }
   for (const auto &routes : route) {
     double x = routes.first;
     double y = routes.second;
-    graphicsView->AddPoint(x, y);
-    graphicsView->ConnectPoints();
+    graphics_display->AddPoint(x, y);
+    graphics_display->ConnectPoints();
   }
 }
 
 void ViewPage::resizeEvent(QResizeEvent *event) {
   QWidget::resizeEvent(event);
-  GraphicsDisplay *graphics_view =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
-  if (graphics_view) {
-    graphics_view->FitViewToScene();
+  GraphicsDisplay *graphics_display =
+      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
+  if (graphics_display) {
+    graphics_display->FitViewToScene();
   }
 }
 
 void ViewPage::HandlePointClicked(double x, double y) {
-  GraphicsDisplay *graphicsView =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
-  if (!graphicsView) return;
+  GraphicsDisplay *graphics_display =
+      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
+  if (!graphics_display) return;
 
   // 记录点击的坐标
   pre_clicked_x = last_clicked_x;
   pre_clicked_y = last_clicked_y;
   last_clicked_x = x;
   last_clicked_y = y;
+  qDebug() << "HandlePointClicked called with x =" << x << ", y =" << y;
 
-  qDebug() << "Received point coordinates: x =" << x << ", y =" << y;
-  emit IdRequest(pre_clicked_x, pre_clicked_y, Sender::VIEW_PAGE);
-  emit IdRequest(last_clicked_x, last_clicked_y, Sender::VIEW_PAGE);
-  // 请求坐标匹配
+  //  请求坐标匹配
   emit MyIdRequest(x, y, Sender::VIEW_PAGE);
 }
+
 void ViewPage::IdsReceiver(const Node &node, Sender sender) {
-  GraphicsDisplay *graphics_view =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
+  GraphicsDisplay *graphics_display =
+      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
+  if (sender != Sender::VIEW_PAGE) {
+    return;
+  }
+  qDebug() << "nice";
   if (!node.info_valid) {
     return;
   }
-  if (graphics_view) {
-    graphics_view->AddBlackPoint(node.pos_x, node.pos_y);
+  if (graphics_display) {
+    graphics_display->AddBlackPoint(node.pos_x, node.pos_y);
   }
   emit MyInfoRequest(node.id, Sender::VIEW_PAGE);
 }
 
 void ViewPage::on_addnode_button_clicked() {
-  GraphicsDisplay *graphics_view =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
-  if (graphics_view) {
+  GraphicsDisplay *graphics_display =
+      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
+  if (graphics_display) {
     // 连接点
-    graphics_view->ConnectPoints();
+    graphics_display->ConnectPoints();
   }
 }
 
 void ViewPage::on_clear_button_clicked() {
-  GraphicsDisplay *graphics_view =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_view);
-  if (graphics_view) {
-    graphics_view->ClearPoints();
-    graphics_view->ClearBluePoints();  // 调用清除点的函数
+  GraphicsDisplay *graphics_display =
+      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
+  if (graphics_display) {
+    graphics_display->ClearPoints();
+    graphics_display->ClearBluePoints();  // 调用清除点的函数
   }
 }
 
@@ -131,37 +146,13 @@ void ViewPage::IdsReceiverAndFindCaller(const Node &node, Sender sender) {
 void ViewPage::on_route_button_clicked() {
   emit RequestSites(Sender::VIEW_PAGE);
 }
-/*
+
 void ViewPage::DisplayInfo(const Info &info, const QByteArray &image_data,
                            Sender sender) {
   // 清除之前的图像和文本
-  view_page->info_graphics_view->scene()->clear();
-  view_page->text_edit->clear();
-  QGraphicsScene *scene = new QGraphicsScene(this);
-  view_page->info_graphics_view->setScene(scene);
-  QPixmap image;
-  if (!image_data.isEmpty()) {
-    if (!image.loadFromData(image_data)) {
-      qDebug() << "Unable to load image from data.";
-    }
+  if (sender != Sender::VIEW_PAGE) {
+    return;
   }
-
-  if (!image.isNull()) {
-    scene->addPixmap(image.scaled(view_page->info_graphics_view->size(),
-                                  Qt::KeepAspectRatio,
-                                  Qt::SmoothTransformation));
-  } else {
-    qDebug() << "No image data provided.";
-  }
-
-  // 显示名称和描述
-  QString text =
-      QString("Name: %1\nDescription: %2").arg(info.name, info.description);
-  view_page->text_edit->setText(text);
-}*/
-void ViewPage::DisplayInfo(const Info &info, const QByteArray &image_data,
-                           Sender sender) {
-  // 清除之前的图像和文本
   if (view_page->info_graphics_view->scene()) {
     view_page->info_graphics_view->scene()->clear();
   } else {

@@ -3,8 +3,6 @@
 GraphicsDisplay::GraphicsDisplay(QWidget *parent)
     : QGraphicsView(parent), scene(new QGraphicsScene(this)) {
   this->setScene(scene);
-  connect(campus_map, &CampusMap::SitesFound, my_graphics,
-          &GraphicsDisplay::DisplaySites);
 
   // Load the map image
   QPixmap map_pixmap(":/map.png");  // 加载图片
@@ -39,19 +37,6 @@ void GraphicsDisplay::resizeEvent(QResizeEvent *event) {
 }
 
 void GraphicsDisplay::ClearPoints() {
-  /*
-for (auto point : points) {
-  scene->removeItem(point);
-  delete point;
-}
-points.clear();
-
-// 删除所有标签
-for (auto label : labels) {
-  scene->removeItem(label);
-  delete label;
-}
-labels.clear();*/
   // 删除所有线条
   for (auto *point : blackPoints) {
     scene->removeItem(point);
@@ -60,7 +45,6 @@ labels.clear();*/
   blackPoints.clear();
 
   // 强制刷新视图
-
   scene->update();
   this->viewport()->update();
 }
@@ -108,33 +92,22 @@ void GraphicsDisplay::mousePressEvent(QMouseEvent *event) {
 
   if (scene->sceneRect().contains(scenePos)) {
     // AddBlackPoint(x, y);
+    qDebug() << "Mouse press event received at x:" << x << " y:" << y;
+
     emit PointClicked(x, y);  // 发送坐标信号
   }
 }
 
-void GraphicsDisplay::DisplaySites(
-    const QVector<QPair<QPair<double, double>, QString>> &sites) {
-  ClearPoints();  // 首先清除所有旧的点和标签
-
-  for (const auto &site : sites) {
-    double x = site.first.first;
-    double y = site.first.second;
-    const QString &labelText = site.second;
-
-    AddPoint(x, y, labelText);
-  }
-}
-
 void GraphicsDisplay::AddPoint(int x, int y, const QString &labelText) {
-  // 创建一个点
+  // 创建一个更大的红色点
   QGraphicsEllipseItem *point =
-      scene->addEllipse(x - 5, y - 5, 10, 10, QPen(Qt::red), QBrush(Qt::red));
+      scene->addEllipse(x - 10, y - 10, 20, 20, QPen(Qt::red), QBrush(Qt::red));
   points.append(point);
 
   // 创建一个标签
   QGraphicsTextItem *label = scene->addText(labelText);
   label->setDefaultTextColor(Qt::red);
-  label->setPos(x + 10, y - 10);
+  label->setPos(x + 20, y - 10);  // 标签位置也相应调整
   labels.append(label);
 
   // 刷新视图
@@ -152,15 +125,15 @@ void GraphicsDisplay::DisplayPoint(double x, double y, bool matched) {
 }
 
 void GraphicsDisplay::AddBlackPoint(double x, double y) {
-  if (blackPoints.size() > maxBlackPoints) {  // 如果已达到或超过最大点数限制
+  if (blackPoints.size() > maxBlackPoints) {  // 如果达到或超过最大点数限制
     // 移除最早添加的点
     QGraphicsEllipseItem *oldestPoint = blackPoints.takeFirst();
     scene->removeItem(oldestPoint);
     delete oldestPoint;
   }
-  // 添加新的黑色点
+  // 添加新的更大的黑色点
   QGraphicsEllipseItem *point = scene->addEllipse(
-      x - 5, y - 5, 10, 10, QPen(Qt::black), QBrush(Qt::black));
+      x - 10, y - 10, 20, 20, QPen(Qt::black), QBrush(Qt::black));
   blackPoints.append(point);
 }
 
