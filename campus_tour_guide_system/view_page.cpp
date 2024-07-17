@@ -21,8 +21,6 @@ ViewPage::ViewPage(QWidget *parent)
 ViewPage::~ViewPage() { delete view_page; }
 
 void ViewPage::on_return_button_clicked() {
-  GraphicsDisplay *graphics_display =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
   if (graphics_display) {
     graphics_display->ClearPoints();
     view_page->info_graphics_view->scene()->clear();
@@ -41,8 +39,6 @@ void ViewPage::HandleSitesFound(
   if (sites.isEmpty()) {
     qDebug() << "No sites found.";
   }
-  GraphicsDisplay *graphics_display =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
   graphics_display->ClearPoints();
   for (const auto &site : sites) {
     qDebug() << "Site position: " << site.first.first << ", "
@@ -56,8 +52,6 @@ void ViewPage::HandleSitesFound(
 }
 
 void ViewPage::HandlePathVector(QVector<QPair<double, double>> route) {
-  GraphicsDisplay *graphics_display =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
   graphics_display->ClearBluePoints();
   if (route.isEmpty()) {
     qDebug() << "no path found";
@@ -73,16 +67,12 @@ void ViewPage::HandlePathVector(QVector<QPair<double, double>> route) {
 
 void ViewPage::resizeEvent(QResizeEvent *event) {
   QWidget::resizeEvent(event);
-  GraphicsDisplay *graphics_display =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
   if (graphics_display) {
     graphics_display->FitViewToScene();
   }
 }
 
 void ViewPage::HandlePointClicked(double x, double y) {
-  GraphicsDisplay *graphics_display =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
   if (!graphics_display) return;
 
   // 记录点击的坐标
@@ -97,8 +87,6 @@ void ViewPage::HandlePointClicked(double x, double y) {
 }
 
 void ViewPage::IdsReceiver(const Node &node, Sender sender) {
-  GraphicsDisplay *graphics_display =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
   if (sender != Sender::VIEW_PAGE) {
     return;
   }
@@ -113,8 +101,6 @@ void ViewPage::IdsReceiver(const Node &node, Sender sender) {
 }
 
 void ViewPage::on_addnode_button_clicked() {
-  GraphicsDisplay *graphics_display =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
   if (graphics_display) {
     // 连接点
     graphics_display->ConnectPoints();
@@ -122,8 +108,6 @@ void ViewPage::on_addnode_button_clicked() {
 }
 
 void ViewPage::on_clear_button_clicked() {
-  GraphicsDisplay *graphics_display =
-      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
   if (graphics_display) {
     graphics_display->ClearPoints();
     view_page->info_graphics_view->scene()->clear();
@@ -148,7 +132,12 @@ void ViewPage::IdsReceiverAndFindCaller(const Node &node, Sender sender) {
     }
 
     if (first_arrive && second_arrive) {
+      if (first_arrived_id == second_arrived_id) {
+        second_arrive = false;
+        return;
+      }
       first_arrive = second_arrive = false;
+      qDebug() << "call find path";
       emit CallFindPath(first_arrived_id, second_arrived_id);
     }
   }
