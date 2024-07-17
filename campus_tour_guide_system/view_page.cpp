@@ -10,17 +10,25 @@ ViewPage::ViewPage(QWidget *parent)
   if (graphics_display) {
     connect(graphics_display, &GraphicsDisplay::PointClicked, this,
             &ViewPage::HandlePointClicked);
-    bool connected = connect(graphics_display, &GraphicsDisplay::PointClicked,
-                             this, &ViewPage::HandlePointClicked);
-    if (!connected) {
-      qDebug() << "Connection failed!";
-    }
   }
+  // 设置文本编辑器为只读
+  view_page->text_edit->setReadOnly(true);
+  // 使用 QTimer在构造函数完成后立即发出 RequestSites 信号
+  QTimer::singleShot(0, this,
+                     [this]() { emit RequestSites(Sender::VIEW_PAGE); });
 }
 
 ViewPage::~ViewPage() { delete view_page; }
 
 void ViewPage::on_return_button_clicked() {
+  GraphicsDisplay *graphics_display =
+      qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
+  if (graphics_display) {
+    graphics_display->ClearPoints();
+    view_page->info_graphics_view->scene()->clear();
+    view_page->text_edit->clear();
+    graphics_display->ClearBluePoints();  // 调用清除点的函数
+  }
   this->hide();
   emit BackToMainPage();
 }
@@ -58,8 +66,9 @@ void ViewPage::HandlePathVector(QVector<QPair<double, double>> route) {
     double x = routes.first;
     double y = routes.second;
     graphics_display->AddPoint(x, y);
-    graphics_display->ConnectPoints();
+    // graphics_display->ConnectPoints();
   }
+  graphics_display->ConnectPoints();
 }
 
 void ViewPage::resizeEvent(QResizeEvent *event) {
@@ -117,6 +126,8 @@ void ViewPage::on_clear_button_clicked() {
       qobject_cast<GraphicsDisplay *>(view_page->graphics_display);
   if (graphics_display) {
     graphics_display->ClearPoints();
+    view_page->info_graphics_view->scene()->clear();
+    view_page->text_edit->clear();
     graphics_display->ClearBluePoints();  // 调用清除点的函数
   }
 }
@@ -141,10 +152,6 @@ void ViewPage::IdsReceiverAndFindCaller(const Node &node, Sender sender) {
       emit CallFindPath(first_arrived_id, second_arrived_id);
     }
   }
-}
-
-void ViewPage::on_route_button_clicked() {
-  emit RequestSites(Sender::VIEW_PAGE);
 }
 
 void ViewPage::DisplayInfo(const Info &info, const QByteArray &image_data,
@@ -176,7 +183,13 @@ void ViewPage::DisplayInfo(const Info &info, const QByteArray &image_data,
   }
 
   // 显示名称和描述
+  view_page->text_edit->clear();
   QString text =
       QString("Name: %1\nDescription: %2").arg(info.name, info.description);
   view_page->text_edit->setText(text);
+}
+void ViewPage::OnNodeNotFound(Sender sender) {
+  if (sender == Sender::VIEW_PAGE) {
+    QMessageBox::warning(this, "景点搜索", "不是景点");
+  }
 }

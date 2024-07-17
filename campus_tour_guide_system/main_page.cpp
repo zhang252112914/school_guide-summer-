@@ -5,6 +5,13 @@
 MainPage::MainPage(QWidget *parent)
     : QWidget(parent), main_page(new Ui::MainPage) {
   main_page->setupUi(this);
+  main_page->view_button->setStyleSheet(
+      "background-color: transparent !important; border: none !important;");
+  main_page->manage_button->setStyleSheet(
+      "background-color: transparent !important; border: none !important;");
+  main_page->help_button->setStyleSheet(
+      "background-color: transparent !important; border: none !important;");
+
   setWindowTitle("武汉大学校园导航系统");
 }
 

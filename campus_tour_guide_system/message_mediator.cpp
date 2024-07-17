@@ -63,4 +63,6 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
   connect(campus_map, &CampusMap::ReturnPathVector, view_page,
           &ViewPage::HandlePathVector);
   connect(campus_map, &CampusMap::InfoFound, view_page, &ViewPage::DisplayInfo);
+  connect(campus_map, &CampusMap::NodeNotFound, view_page,
+          &ViewPage::OnNodeNotFound);
 }

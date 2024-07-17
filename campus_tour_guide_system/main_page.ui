@@ -13,6 +13,14 @@
   <property name="windowTitle">
    <string>Widget</string>
   </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+border-image: url(:/schoolpicture.jpg); 
+</string>
+  </property>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
@@ -105,6 +113,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="view_button">
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
         <property name="text">
          <string>查看地图</string>
         </property>
@@ -125,8 +139,17 @@
       </item>
       <item>
        <widget class="QPushButton" name="manage_button">
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
         <property name="text">
          <string>管理</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -145,6 +168,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="help_button">
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
         <property name="text">
          <string>帮助页面</string>
         </property>

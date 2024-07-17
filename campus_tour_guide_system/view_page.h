@@ -2,9 +2,11 @@
 #define VIEW_PAGE_H
 
 #include <QByteArray>
+#include <QMessageBox>
 #include <QMouseEvent>
 #include <QPair>
 #include <QString>
+#include <QTimer>
 #include <QVector>
 #include <QWidget>
 
@@ -33,13 +35,13 @@ class ViewPage : public QWidget {
   void HandlePointClicked(double x, double y);
   void on_addnode_button_clicked();
   void on_clear_button_clicked();
-  void on_route_button_clicked();
   // 接受查询的结果并调用后端的查询函数
   void IdsReceiverAndFindCaller(const Node &node, Sender sender);
   void HandleSitesFound(QVector<QPair<QPair<double, double>, QString>> sites,
                         Sender sender);
   void IdsReceiver(const Node &node, Sender sender);
   void HandlePathVector(QVector<QPair<double, double>> route);
+  void OnNodeNotFound(Sender sender);
 
  private:
   Ui::ViewPage *view_page;
