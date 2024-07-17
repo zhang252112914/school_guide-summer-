@@ -65,7 +65,7 @@ border-image: url(:/schoolpicture.jpg);
         <item>
          <widget class="QPushButton" name="manage_button">
           <property name="autoFillBackground">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="styleSheet">
            <string notr="true"/>
