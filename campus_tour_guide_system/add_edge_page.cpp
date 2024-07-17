@@ -126,14 +126,14 @@ void AddEdgePage::ConfirmNode(Node back_node, Sender s) {
 void AddEdgePage::PaintEdges(  //
     QVector<QPair<QPair<double, double>, QPair<double, double>>> edges) {
   for (auto &edge : edges) {
-    x1 = edge.first.first;
-    y1 = edge.first.second;
-    x2 = edge.second.first;
-    y2 = edge.second.second;
-    QPointF p1(x1, y1);
-    QPointF p2(x2, y2);
-    graph->AddPoint(x1, y1);
-    graph->AddPoint(x2, y2);
+    px1 = edge.first.first;
+    py1 = edge.first.second;
+    px2 = edge.second.first;
+    py2 = edge.second.second;
+    QPointF p1(px1, py1);
+    QPointF p2(px2, py2);
+    graph->AddPoint(px1, py1);
+    graph->AddPoint(px2, py2);
     graph->AddLine(p1, p2);
   }
 }

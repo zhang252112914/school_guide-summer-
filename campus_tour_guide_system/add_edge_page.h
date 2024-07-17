@@ -23,6 +23,7 @@ class AddEdgePage : public QWidget {
   Ui::AddEdgePage *add_edge_page;
   GraphicsDisplay *graph;
   double x1, y1, x2, y2;
+  double px1, py1, px2, py2;
   Node n1, n2;
   Edge edge;
   // QVector<Node> nodes;
