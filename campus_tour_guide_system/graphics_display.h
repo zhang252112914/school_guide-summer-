@@ -25,9 +25,10 @@ class GraphicsDisplay : public QGraphicsView {
 
   // 公共方法来添加点和连接点
   void AddPoint(int x, int y, const QString &labelText);
-  void ConnectPoints();               // 新增方法来绘制线段连接点
-  void ClearPoints();                 // 清除点和线的方法
-  void AddPoint(double x, double y);  // 重载，不需要标签
+  void ConnectPoints();  // 新增方法来绘制线段连接点
+  void AddLine(QPointF p1, QPointF p2);
+  void ClearPoints();                      // 清除点和线的方法
+  void AddPoint(double x, double y);       // 重载，不需要标签
   void AddBlackPoint(double x, double y);  // 添加黑色点的方法
   void ClearBluePoints();
   void resizeEvent(QResizeEvent *event) override;
@@ -36,6 +37,9 @@ class GraphicsDisplay : public QGraphicsView {
   void PaintForAddSitePage(QVector<Node> nodes);
   void PaintBluePoint(Node node);
   void DeletePointOfAddPage();
+  void DeletePointOneOfAddEdgePage();
+  void DeletePointTwoOfAddEdgePage();
+  void DeletePointsOfAddEdgePage();
 
  public slots:
   void DisplayPoint(double x, double y, bool matched);

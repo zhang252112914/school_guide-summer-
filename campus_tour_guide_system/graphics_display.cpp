@@ -69,6 +69,11 @@ void GraphicsDisplay::ConnectPoints() {
   }
 }
 
+void GraphicsDisplay::AddLine(QPointF p1, QPointF p2) {
+  QGraphicsLineItem *line = scene->addLine(QLineF(p1, p2), QPen(Qt::blue, 2));
+  lines.append(line);
+}
+
 void GraphicsDisplay::ClearBluePoints() {
   for (auto point : bluePoints) {
     scene->removeItem(point);
@@ -167,6 +172,32 @@ void GraphicsDisplay::DeletePointOfAddPage() {
   if (!blackPoints.empty()) {
     scene->removeItem(blackPoints[0]);
     delete blackPoints[0];
+    blackPoints.clear();
+  }
+}
+
+void GraphicsDisplay::DeletePointOneOfAddEdgePage() {
+  if (!blackPoints.empty()) {
+    QGraphicsEllipseItem *point = blackPoints.takeFirst();
+    scene->removeItem(point);
+    delete point;
+  }
+}
+
+void GraphicsDisplay::DeletePointTwoOfAddEdgePage() {
+  if (!blackPoints.empty()) {
+    QGraphicsEllipseItem *point = blackPoints.takeLast();
+    scene->removeItem(point);
+    delete point;
+  }
+}
+
+void GraphicsDisplay::DeletePointsOfAddEdgePage() {
+  if (!blackPoints.empty()) {
+    scene->removeItem(blackPoints[0]);
+    delete blackPoints[0];
+    scene->removeItem(blackPoints[1]);
+    delete blackPoints[1];
     blackPoints.clear();
   }
 }
