@@ -105,7 +105,7 @@ void AddEdgePage::ConfirmNode(Node back_node, Sender s) {
 
 void AddEdgePage::PaintEdges(  //
     QVector<QPair<QPair<double, double>, QPair<double, double>>> edges) {
-  for (auto edge : edges) {
+  for (auto &edge : edges) {
     x1 = edge.first.first;
     y1 = edge.first.second;
     x2 = edge.second.first;

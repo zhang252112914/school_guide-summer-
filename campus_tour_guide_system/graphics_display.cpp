@@ -197,8 +197,8 @@ void GraphicsDisplay::DeletePointTwoOfAddEdgePage() {
 void GraphicsDisplay::DeletePointsOfAddEdgePage() {
   if (!blackPoints.empty()) {
     scene->removeItem(blackPoints[0]);
-    delete blackPoints[0];
     scene->removeItem(blackPoints[1]);
+    delete blackPoints[0];
     delete blackPoints[1];
     blackPoints.clear();
   }
