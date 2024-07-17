@@ -26,7 +26,7 @@ void AddEdgePage::on_return_button_clicked() {
 void AddEdgePage::on_confirm_button_clicked() {
   // QMessageBox::information(this, "提示", "添加成功");
   // emit AddEdge();
-  if (n1_exist && n2_exist) {
+  if (n1_clicked && n2_clicked) {
     QPair<double, double> StartP(x1, y1);
     QPair<double, double> EndP(x2, y2);
     QPointF p1(x1, y1);

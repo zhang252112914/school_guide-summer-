@@ -72,6 +72,8 @@ void GraphicsDisplay::ConnectPoints() {
 void GraphicsDisplay::AddLine(QPointF p1, QPointF p2) {
   QGraphicsLineItem *line = scene->addLine(QLineF(p1, p2), QPen(Qt::blue, 2));
   lines.append(line);
+  scene->update();
+  this->viewport()->update();
 }
 
 void GraphicsDisplay::ClearBluePoints() {

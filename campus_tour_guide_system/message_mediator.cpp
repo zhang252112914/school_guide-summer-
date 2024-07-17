@@ -85,7 +85,7 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
   connect(campus_map, &CampusMap::InfoFound, view_page, &ViewPage::DisplayInfo);
   connect(manage_page, &ManagePage::ShowAddEdgePage, add_edge_page,
           &AddEdgePage::show);
-  //在调用页面的同时触发绘图
+  // 在调用页面的同时触发绘图
   connect(manage_page, &ManagePage::ShowAddSiteEdge, add_site_page,
           &AddSitePage::PaintRequestWrapper);
   connect(manage_page, &ManagePage::ShowAddSiteEdge, add_site_page,
@@ -97,7 +97,7 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
           &ManagePage::show);
 
   // add_site_page的信号和槽
-  //下面两个connect都是针对add_site_page和campus_map之间关于id的交互
+  // 下面两个connect都是针对add_site_page和campus_map之间关于id的交互
   connect(add_site_page, &AddSitePage::CoordinateToNode, campus_map,
           &CampusMap::SearchNodeSlot);
   connect(campus_map, &CampusMap::NodeFound, add_site_page,
@@ -109,17 +109,30 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
   connect(campus_map, &CampusMap::NodesFeedBack, add_site_page,
           &AddSitePage::PaintMap);
 
-  //用于景点信息查询的
+  // 用于景点信息查询的
   connect(add_site_page, &AddSitePage::PresentInfoRequest, campus_map,
           &CampusMap::GetInfoFromIdSlot);
   connect(campus_map, &CampusMap::InfoFound, add_site_page,
           &AddSitePage::PresentInfo);
 
-  //添加或修改节点的
+  // 添加或修改节点的
   connect(add_site_page, &AddSitePage::AddMessageCollection, campus_map,
           &CampusMap::AddInfoSlot);
   connect(add_site_page, &AddSitePage::EditMessageCollection, campus_map,
           &CampusMap::EditInfoSlot);
   connect(manage_page, &ManagePage::ShowAddEdgePage, add_site_page,
           &AddSitePage::PaintRequestWrapper);
+
+  connect(add_edge_page, &AddEdgePage::NewNode, campus_map,
+          &CampusMap::AddNode);
+  connect(add_edge_page, &AddEdgePage::NewEdge, campus_map,
+          &CampusMap::AddEdge);
+  connect(add_edge_page, &AddEdgePage::GetEdges, campus_map,
+          &CampusMap::GetEdgeSlot);
+  connect(campus_map, &CampusMap::EdgesFound, add_edge_page,
+          &AddEdgePage::PaintEdges);
+  connect(add_edge_page, &AddEdgePage::FindNode, campus_map,
+          &CampusMap::SearchNodeSlot);
+  connect(campus_map, &CampusMap::NodeFound, add_edge_page,
+          &AddEdgePage::ConfirmNode);
 }
