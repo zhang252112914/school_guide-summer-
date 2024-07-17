@@ -67,13 +67,25 @@ void AddEdgePage::receive_one_node(double x, double y) {  // 考虑点击范围
     graph->AddBlackPoint(x1, y1);
     QString PText = QString("第一个点：(%1,%2）").arg(x1).arg(y1);
     add_edge_page->point_one_label->setText(PText);
-  } else {
+  } else if (n1_clicked && !n2_clicked) {
     x2 = x;
     y2 = y;
     n2_clicked = 1;
     emit FindNode(x2, y2);
     graph->AddBlackPoint(x2, y2);
     QString PText = QString("第二个点：(%1,%2）").arg(x2).arg(y2);
+    add_edge_page->point_two_label->setText(PText);
+  } else {
+    x1 = x2;
+    y1 = y2;
+    x2 = x;
+    y2 = y;
+    emit FindNode(x2, y2);
+    graph->DeletePointOneOfAddEdgePage();
+    graph->AddBlackPoint(x2, y2);
+    QString PText = QString("第一个点：(%1,%2）").arg(x1).arg(y1);
+    add_edge_page->point_one_label->setText(PText);
+    PText = QString("第二个点：(%1,%2）").arg(x2).arg(y2);
     add_edge_page->point_two_label->setText(PText);
   }
 }
@@ -98,6 +110,14 @@ void AddEdgePage::ConfirmNode(Node back_node, Sender s) {
       graph->DeletePointTwoOfAddEdgePage();
       graph->AddBlackPoint(x2, y2);
       QString PText = QString("第二个点：(%1,%2）").arg(x2).arg(y2);
+      add_edge_page->point_two_label->setText(PText);
+    } else {
+      graph->DeletePointsOfAddEdgePage();
+      graph->AddBlackPoint(x1, y1);
+      graph->AddBlackPoint(x2, y2);
+      QString PText = QString("第一个点：(%1,%2）").arg(x1).arg(y1);
+      add_edge_page->point_one_label->setText(PText);
+      PText = QString("第二个点：(%1,%2）").arg(x2).arg(y2);
       add_edge_page->point_two_label->setText(PText);
     }
   }
