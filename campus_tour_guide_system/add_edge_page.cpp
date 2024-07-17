@@ -59,7 +59,7 @@ void AddEdgePage::on_cancel_button_clicked() {
 }
 
 void AddEdgePage::receive_one_node(double x, double y) {  // 考虑点击范围
-  if (!n1_clicked) {
+  if (!n1_clicked && !n2_clicked) {
     x1 = x;
     y1 = y;
     n1_clicked = 1;
@@ -75,7 +75,7 @@ void AddEdgePage::receive_one_node(double x, double y) {  // 考虑点击范围
     graph->AddBlackPoint(x2, y2);
     QString PText = QString("第二个点：(%1,%2）").arg(x2).arg(y2);
     add_edge_page->point_two_label->setText(PText);
-  } else {
+  } else if (n1_clicked && n2_clicked) {
     x1 = x2;
     y1 = y2;
     x2 = x;
