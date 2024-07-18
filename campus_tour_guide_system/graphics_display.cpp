@@ -133,10 +133,10 @@ void GraphicsDisplay::DisplayPoint(double x, double y, bool matched) {
 
 void GraphicsDisplay::AddBlackPoint(double x, double y) {
   if (blackPoints.size() > maxBlackPoints) {  // 如果达到或超过最大点数限制
-    // 移除最早添加的点
-    QGraphicsEllipseItem *oldestPoint = blackPoints.takeFirst();
-    scene->removeItem(oldestPoint);
-    delete oldestPoint;
+                                              // 移除最早添加的点
+    scene->removeItem(blackPoints[0]);
+    delete blackPoints[0];
+    blackPoints.removeAt(0);
   }
   // 添加新的更大的黑色点
   QGraphicsEllipseItem *point = scene->addEllipse(
@@ -203,17 +203,17 @@ void GraphicsDisplay::DeletePointOfAddPage() {
 
 void GraphicsDisplay::DeletePointOneOfAddEdgePage() {
   if (!blackPoints.empty()) {
-    QGraphicsEllipseItem *point = blackPoints.takeFirst();
-    scene->removeItem(point);
-    delete point;
+    scene->removeItem(blackPoints[0]);
+    delete blackPoints[0];
+    blackPoints.removeAt(0);
   }
 }
 
 void GraphicsDisplay::DeletePointTwoOfAddEdgePage() {
   if (!blackPoints.empty()) {
-    QGraphicsEllipseItem *point = blackPoints.takeLast();
-    scene->removeItem(point);
-    delete point;
+    scene->removeItem(blackPoints[1]);
+    delete blackPoints[1];
+    blackPoints.removeAt(1);
   }
 }
 
