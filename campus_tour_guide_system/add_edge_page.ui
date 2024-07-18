@@ -23,7 +23,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>480</x>
@@ -32,7 +32,7 @@
      <height>341</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,2,2,1,2,0,2,2,1">
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,2,2,1,2,2,2,1">
     <item>
      <spacer name="verticalSpacer_3">
       <property name="orientation">
@@ -84,13 +84,6 @@
      <widget class="QPushButton" name="confirm_button">
       <property name="text">
        <string>确定</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="show_button">
-      <property name="text">
-       <string>展示</string>
       </property>
      </widget>
     </item>

@@ -2,6 +2,7 @@
 #define ADD_EDGE_PAGE_H
 
 #include <QMessageBox>
+#include <QTimer>
 #include <QWidget>
 
 #include "graphics_display.h"
@@ -51,7 +52,6 @@ class AddEdgePage : public QWidget {
 
   void on_return_button_clicked();
   void on_confirm_button_clicked();
-  void on_show_button_clicked();
   void on_cancel_button_clicked();
 
   void PaintEdges(

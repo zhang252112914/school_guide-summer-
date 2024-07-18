@@ -6,7 +6,7 @@ AddEdgePage::AddEdgePage(QWidget *parent)
     : QWidget(parent), add_edge_page(new Ui::AddEdgePage) {
   add_edge_page->setupUi(this);
   setWindowTitle("Add Path");
-  graph = add_edge_page->graph_view;
+  graph = qobject_cast<GraphicsDisplay *>(add_edge_page->graph_view);
   if (graph) {
     connect(graph, &GraphicsDisplay::PointClicked, this,
             &AddEdgePage::receive_one_node);
@@ -14,6 +14,7 @@ AddEdgePage::AddEdgePage(QWidget *parent)
   add_edge_page->point_one_label->setText("第一个点：");
   add_edge_page->point_two_label->setText("第二个点：");
   add_edge_page->line_label->setText("边：");
+  QTimer::singleShot(0, this, [this]() { emit GetEdges(Sender::MANAGE_PAGE); });
 }
 
 AddEdgePage::~AddEdgePage() { delete add_edge_page; }
@@ -40,10 +41,6 @@ void AddEdgePage::on_confirm_button_clicked() {
     QMessageBox::information(this, "提示", "添加失败");
   }
   on_cancel_button_clicked();
-}
-
-void AddEdgePage::on_show_button_clicked() {
-  emit GetEdges(Sender::MANAGE_PAGE);
 }
 
 void AddEdgePage::on_cancel_button_clicked() {
@@ -135,5 +132,7 @@ void AddEdgePage::PaintEdges(  //
     graph->AddPoint(px1, py1);
     graph->AddPoint(px2, py2);
     graph->AddLine(p1, p2);
+    qDebug() << "打印中";
   }
+  qDebug() << "成功打印边";
 }
