@@ -5,6 +5,7 @@
 ManagePage::ManagePage(QWidget *parent)
     : QWidget(parent), manage_page(new Ui::ManagePage) {
   manage_page->setupUi(this);
+  setWindowTitle("地图管理");
 }
 
 ManagePage::~ManagePage() { delete manage_page; }

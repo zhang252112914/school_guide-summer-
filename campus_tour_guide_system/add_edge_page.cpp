@@ -11,6 +11,7 @@ AddEdgePage::AddEdgePage(QWidget *parent)
     connect(graph, &GraphicsDisplay::PointClicked, this,
             &AddEdgePage::receive_one_node);
   }
+  setWindowTitle("节点、道路管理");
   add_edge_page->point_one_label->setText("第一个点：");
   add_edge_page->point_two_label->setText("第二个点：");
   add_edge_page->line_label->setText("边：");

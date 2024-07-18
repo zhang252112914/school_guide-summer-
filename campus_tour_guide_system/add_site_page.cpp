@@ -13,7 +13,8 @@ AddSitePage::AddSitePage(QWidget* parent)
     connect(graph, &GraphicsDisplay::PointClicked, this,
             &AddSitePage::receive_one_node);
   }
-  // 设置输入框的提示内容
+  setWindowTitle("景点管理");
+  //设置输入框的提示内容
   add_site_page->name_input->setPlaceholderText("景点名称");
   add_site_page->description_input->setPlaceholderText("景点介绍");
   add_site_page->pic_label->setText("No picture");
