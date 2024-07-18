@@ -56,7 +56,8 @@ class AddEdgePage : public QWidget {
   void on_cancel_button_clicked();
 
   void PaintEdges(
-      QVector<QPair<QPair<double, double>, QPair<double, double>>> edges);
+      QVector<QPair<QPair<double, double>, QPair<double, double>>> edges,
+      Sender s);
   void RequestWrapper();
 };
 

@@ -120,7 +120,7 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
           &CampusMap::AddInfoSlot);
   connect(add_site_page, &AddSitePage::EditMessageCollection, campus_map,
           &CampusMap::EditInfoSlot);
-  connect(manage_page, &ManagePage::ShowAddEdgePage, add_site_page,
+  connect(manage_page, &ManagePage::ShowAddSitePage, add_site_page,
           &AddSitePage::PaintRequestWrapper);
   connect(manage_page, &ManagePage::ShowAddEdgePage, add_edge_page,
           &AddEdgePage::RequestWrapper);

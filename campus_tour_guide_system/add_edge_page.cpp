@@ -128,9 +128,12 @@ void AddEdgePage::ConfirmNode(Node back_node, Sender s) {
 }
 
 void AddEdgePage::PaintEdges(  //
-    QVector<QPair<QPair<double, double>, QPair<double, double>>> edges) {
-  graph->PaintForAddEdgePage(edges);
-  qDebug() << "成功完成";
+    QVector<QPair<QPair<double, double>, QPair<double, double>>> edges,
+    Sender s) {
+  if (s == Sender::MANAGE_PAGE) {
+    graph->PaintForAddEdgePage(edges);
+    qDebug() << "成功完成";
+  }
 }
 
 void AddEdgePage::RequestWrapper() { emit GetEdges(Sender::MANAGE_PAGE); }
