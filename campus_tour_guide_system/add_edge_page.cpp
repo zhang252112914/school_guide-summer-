@@ -60,16 +60,16 @@ void AddEdgePage::receive_one_node(double x, double y) {  // 考虑点击范围
     x1 = x;
     y1 = y;
     n1_clicked = 1;
-    emit FindNode(x1, y1);
     graph->AddBlackPoint(x1, y1);
+    emit FindNode(x1, y1);
     QString PText = QString("第一个点：(%1,%2）").arg(x1).arg(y1);
     add_edge_page->point_one_label->setText(PText);
   } else if (n1_clicked && !n2_clicked) {
     x2 = x;
     y2 = y;
     n2_clicked = 1;
-    emit FindNode(x2, y2);
     graph->AddBlackPoint(x2, y2);
+    emit FindNode(x2, y2);
     QString PText = QString("第二个点：(%1,%2）").arg(x2).arg(y2);
     add_edge_page->point_two_label->setText(PText);
   } else if (n1_clicked && n2_clicked) {
@@ -77,9 +77,10 @@ void AddEdgePage::receive_one_node(double x, double y) {  // 考虑点击范围
     y1 = y2;
     x2 = x;
     y2 = y;
-    emit FindNode(x2, y2);
+    n2_clicked_mult = 1;
     graph->DeletePointOneOfAddEdgePage();
     graph->AddBlackPoint(x2, y2);
+    emit FindNode(x2, y2);
     QString PText = QString("第一个点：(%1,%2）").arg(x1).arg(y1);
     add_edge_page->point_one_label->setText(PText);
     PText = QString("第二个点：(%1,%2）").arg(x2).arg(y2);
@@ -98,23 +99,23 @@ void AddEdgePage::ConfirmNode(Node back_node, Sender s) {
       y2 = back_node.pos_y;
       n2_exist = 1;
     }
-    if (n1_exist && !n2_exist) {
+    if (!n2_clicked_mult && n1_exist && !n2_exist) {
       graph->DeletePointOneOfAddEdgePage();
       graph->AddBlackPoint(x1, y1);
       QString PText = QString("第一个点：(%1,%2）").arg(x1).arg(y1);
       add_edge_page->point_one_label->setText(PText);
-    } else if (!n1_exist && n2_exist) {
+    } else if ((!n2_clicked_mult && !n1_exist && n2_exist) ||
+               (!n2_clicked_mult && n1_exist && n2_exist)) {
       graph->DeletePointTwoOfAddEdgePage();
       graph->AddBlackPoint(x2, y2);
       QString PText = QString("第二个点：(%1,%2）").arg(x2).arg(y2);
       add_edge_page->point_two_label->setText(PText);
-    } else {
-      graph->DeletePointsOfAddEdgePage();
-      graph->AddBlackPoint(x1, y1);
+      n1_exist = 0;
+      n2_exist = 0;
+    } else if (n2_clicked_mult && !n1_exist && n2_exist) {
+      graph->DeletePointTwoOfAddEdgePage();
       graph->AddBlackPoint(x2, y2);
-      QString PText = QString("第一个点：(%1,%2）").arg(x1).arg(y1);
-      add_edge_page->point_one_label->setText(PText);
-      PText = QString("第二个点：(%1,%2）").arg(x2).arg(y2);
+      QString PText = QString("第二个点：(%1,%2）").arg(x2).arg(y2);
       add_edge_page->point_two_label->setText(PText);
     }
   }

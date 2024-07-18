@@ -31,6 +31,7 @@ class AddEdgePage : public QWidget {
   // QVector<QPair<QPair<double, double>, QPair<double, double>>> edges;
   //  判断已经点击了多少点
   bool n1_clicked = 0, n2_clicked = 0;
+  bool n2_clicked_mult = 0;
   // 判断点是否已经存在
   bool n1_exist = 0, n2_exist = 0;
 
