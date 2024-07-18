@@ -168,8 +168,11 @@ void CampusMap::ManageIdSend(double pre_x, double pre_y, double last_x,
 */
 
 void CampusMap::GetInfoFromIdSlot(int info_id, Sender sender) {
+  qDebug() << "hi hi";
   last_sender = sender;
+  qDebug() << info_id;
   if (info_map.contains(info_id)) {
+    qDebug() << "hahaha";
     last_info_id = info_id;
     emit RequestImageData(info_id);
   } else {
@@ -208,8 +211,8 @@ void CampusMap::SearchNodeSlot(double pos_x, double pos_y, Sender sender) {
 void CampusMap::GetEdgeSlot(Sender sender) {
   QVector<QPair<QPair<double, double>, QPair<double, double>>> coordinate_pairs;
   for (const auto& edge : edges) {
-    const Node& n1 = edge.end_node_one_id;
-    const Node& n2 = edge.end_node_two_id;
+    const Node& n1 = nodes[edge.end_node_one_id];
+    const Node& n2 = nodes[edge.end_node_two_id];
     QPair<double, double> coord1 = qMakePair(n1.pos_x, n1.pos_y);
     QPair<double, double> coord2 = qMakePair(n2.pos_x, n2.pos_y);
     coordinate_pairs.append(qMakePair(coord1, coord2));
@@ -321,3 +324,5 @@ void CampusMap::dfs(int current, int end,
 
   path.removeLast();
 }
+
+void CampusMap::ReturnNodesToAddSitePage() { emit NodesFeedBack(nodes); }

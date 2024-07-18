@@ -69,6 +69,13 @@ void GraphicsDisplay::ConnectPoints() {
   }
 }
 
+void GraphicsDisplay::AddLine(QPointF p1, QPointF p2) {
+  QGraphicsLineItem *line = scene->addLine(QLineF(p1, p2), QPen(Qt::blue, 2));
+  lines.append(line);
+  scene->update();
+  this->viewport()->update();
+}
+
 void GraphicsDisplay::ClearBluePoints() {
   for (auto point : bluePoints) {
     scene->removeItem(point);
@@ -126,10 +133,10 @@ void GraphicsDisplay::DisplayPoint(double x, double y, bool matched) {
 
 void GraphicsDisplay::AddBlackPoint(double x, double y) {
   if (blackPoints.size() > maxBlackPoints) {  // 如果达到或超过最大点数限制
-    // 移除最早添加的点
-    QGraphicsEllipseItem *oldestPoint = blackPoints.takeFirst();
-    scene->removeItem(oldestPoint);
-    delete oldestPoint;
+                                              // 移除最早添加的点
+    scene->removeItem(blackPoints[0]);
+    delete blackPoints[0];
+    blackPoints.removeAt(0);
   }
   // 添加新的更大的黑色点
   QGraphicsEllipseItem *point = scene->addEllipse(
@@ -155,6 +162,29 @@ void GraphicsDisplay::PaintForAddSitePage(QVector<Node> nodes) {
   }
 }
 
+void GraphicsDisplay::PaintForAddEdgePage(
+    QVector<QPair<QPair<double, double>, QPair<double, double>>> edges) {
+  for (auto edge : edges) {
+    double px1 = edge.first.first;
+    double py1 = edge.first.second;
+    double px2 = edge.second.first;
+    double py2 = edge.second.second;
+    QGraphicsEllipseItem *point_one = nullptr, *point_two = nullptr;
+    QPointF p1(px1, py1), p2(px2, py2);
+    point_one =
+        scene->addEllipse(px1, py1, 10, 10, QPen(Qt::blue), QBrush(Qt::blue));
+    point_two =
+        scene->addEllipse(px2, py2, 10, 10, QPen(Qt::blue), QBrush(Qt::blue));
+    QGraphicsLineItem *line = scene->addLine(QLineF(p1, p2), QPen(Qt::blue, 2));
+    bluePoints.append(point_one);
+    bluePoints.append(point_two);
+    lines.append(line);
+    scene->update();
+    this->viewport()->update();
+    qDebug() << px1 << " " << py1 << " " << px2 << " " << py2;
+  }
+}
+
 void GraphicsDisplay::PaintBluePoint(Node node) {
   QGraphicsEllipseItem *ptr = scene->addEllipse(
       node.pos_x - 5, node.pos_y - 5, 10, 10, QPen(Qt::blue), QBrush(Qt::blue));
@@ -167,6 +197,32 @@ void GraphicsDisplay::DeletePointOfAddPage() {
   if (!blackPoints.empty()) {
     scene->removeItem(blackPoints[0]);
     delete blackPoints[0];
+    blackPoints.clear();
+  }
+}
+
+void GraphicsDisplay::DeletePointOneOfAddEdgePage() {
+  if (!blackPoints.empty()) {
+    scene->removeItem(blackPoints[0]);
+    delete blackPoints[0];
+    blackPoints.removeAt(0);
+  }
+}
+
+void GraphicsDisplay::DeletePointTwoOfAddEdgePage() {
+  if (!blackPoints.empty()) {
+    scene->removeItem(blackPoints[1]);
+    delete blackPoints[1];
+    blackPoints.removeAt(1);
+  }
+}
+
+void GraphicsDisplay::DeletePointsOfAddEdgePage() {
+  if (!blackPoints.empty()) {
+    scene->removeItem(blackPoints[0]);
+    scene->removeItem(blackPoints[1]);
+    delete blackPoints[0];
+    delete blackPoints[1];
     blackPoints.clear();
   }
 }

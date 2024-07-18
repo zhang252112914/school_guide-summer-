@@ -2,6 +2,8 @@
 
 MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
                                  ManagePage *manage_page, HelpPage *help_page,
+                                 AddEdgePage *add_edge_page,
+                                 AddSitePage *add_site_page,
                                  DatabaseManager *db, CampusMap *cp,
                                  QStackedWidget *sw, QObject *parent)
     : QObject{parent},
@@ -9,6 +11,8 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
       view_page(view_page),
       manage_page(manage_page),
       help_page(help_page),
+      add_edge_page(add_edge_page),
+      add_site_page(add_site_page),
       db_manager(db),
       campus_map(cp),
       stacked_widget(sw) {
@@ -79,6 +83,58 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
   connect(campus_map, &CampusMap::ReturnPathVector, view_page,
           &ViewPage::HandlePathVector);
   connect(campus_map, &CampusMap::InfoFound, view_page, &ViewPage::DisplayInfo);
-  connect(campus_map, &CampusMap::NodeNotFound, view_page,
-          &ViewPage::OnNodeNotFound);
+  connect(manage_page, &ManagePage::ShowAddEdgePage, add_edge_page,
+          &AddEdgePage::show);
+
+  connect(manage_page, &ManagePage::ShowAddEdgePage,
+          [this]() { this->stacked_widget->setCurrentIndex(4); });
+  connect(manage_page, &ManagePage::ShowAddSitePage,
+          [this]() { this->stacked_widget->setCurrentIndex(5); });
+
+  connect(add_edge_page, &AddEdgePage::BackToManagePage,
+          [this]() { this->stacked_widget->setCurrentIndex(2); });
+  connect(add_site_page, &AddSitePage::BackToManagePage,
+          [this]() { this->stacked_widget->setCurrentIndex(2); });
+
+  // add_site_page的信号和槽
+  // 下面两个connect都是针对add_site_page和campus_map之间关于id的交互
+  connect(add_site_page, &AddSitePage::CoordinateToNode, campus_map,
+          &CampusMap::SearchNodeSlot);
+  connect(campus_map, &CampusMap::NodeFound, add_site_page,
+          &AddSitePage::ModifyNode);
+  connect(campus_map, &CampusMap::NodeNotFound, add_site_page,
+          &AddSitePage::InvalidNode);
+  connect(add_site_page, &AddSitePage::PaintRequest, campus_map,
+          &CampusMap::ReturnNodesToAddSitePage);
+  connect(campus_map, &CampusMap::NodesFeedBack, add_site_page,
+          &AddSitePage::PaintMap);
+
+  // 用于景点信息查询的
+  connect(add_site_page, &AddSitePage::PresentInfoRequest, campus_map,
+          &CampusMap::GetInfoFromIdSlot);
+  connect(campus_map, &CampusMap::InfoFound, add_site_page,
+          &AddSitePage::PresentInfo);
+
+  // 添加或修改节点的
+  connect(add_site_page, &AddSitePage::AddMessageCollection, campus_map,
+          &CampusMap::AddInfoSlot);
+  connect(add_site_page, &AddSitePage::EditMessageCollection, campus_map,
+          &CampusMap::EditInfoSlot);
+  connect(manage_page, &ManagePage::ShowAddSitePage, add_site_page,
+          &AddSitePage::PaintRequestWrapper);
+  connect(manage_page, &ManagePage::ShowAddEdgePage, add_edge_page,
+          &AddEdgePage::RequestWrapper);
+
+  connect(add_edge_page, &AddEdgePage::NewNode, campus_map,
+          &CampusMap::AddNode);
+  connect(add_edge_page, &AddEdgePage::NewEdge, campus_map,
+          &CampusMap::AddEdge);
+  connect(add_edge_page, &AddEdgePage::GetEdges, campus_map,
+          &CampusMap::GetEdgeSlot);
+  connect(campus_map, &CampusMap::EdgesFound, add_edge_page,
+          &AddEdgePage::PaintEdges);
+  connect(add_edge_page, &AddEdgePage::FindNode, campus_map,
+          &CampusMap::SearchNodeSlot);
+  connect(campus_map, &CampusMap::NodeFound, add_edge_page,
+          &AddEdgePage::ConfirmNode);
 }

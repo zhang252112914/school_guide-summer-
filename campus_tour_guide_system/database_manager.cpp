@@ -9,11 +9,13 @@ DatabaseManager::DatabaseManager(const QString &config_file_path,
   QString dbname = settings.value("Database/DatabaseName").toString();
   QString username = settings.value("Database/Username").toString();
   QString password = settings.value("Database/Password").toString();
+  int port = settings.value("Database/Port").toInt();
 
   db.setHostName(hostname);
   db.setDatabaseName(dbname);
   db.setUserName(username);
   db.setPassword(password);
+  db.setPort(port);
   db.setConnectOptions("MYSQL_OPT_RECONNECT=1");
 
   // Try to open database
@@ -306,6 +308,7 @@ void DatabaseManager::FetchImageData(int info_id) {
     qDebug() << "Database is not open";
     return;
   }
+  qDebug() << "here!";
 
   QSqlQuery query;
   query.prepare("SELECT image FROM infos WHERE id = :id");
