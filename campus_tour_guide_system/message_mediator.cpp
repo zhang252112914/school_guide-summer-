@@ -123,7 +123,7 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
   connect(manage_page, &ManagePage::ShowAddEdgePage, add_site_page,
           &AddSitePage::PaintRequestWrapper);
   connect(manage_page, &ManagePage::ShowAddEdgePage, add_edge_page,
-          &AddEdgePage::PaintRequestWrapper);
+          &AddEdgePage::RequestWrapper);
 
   connect(add_edge_page, &AddEdgePage::NewNode, campus_map,
           &CampusMap::AddNode);

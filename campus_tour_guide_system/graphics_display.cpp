@@ -179,6 +179,8 @@ void GraphicsDisplay::PaintForAddEdgePage(
     bluePoints.append(point_one);
     bluePoints.append(point_two);
     lines.append(line);
+    scene->update();
+    this->viewport()->update();
     qDebug() << px1 << " " << py1 << " " << px2 << " " << py2 << Qt::endl;
   }
 }

@@ -133,4 +133,4 @@ void AddEdgePage::PaintEdges(  //
   qDebug() << "成功完成";
 }
 
-void AddEdgePage::PaintRequestWrapper() { emit GetEdges(Sender::MANAGE_PAGE); }
+void AddEdgePage::RequestWrapper() { emit GetEdges(Sender::MANAGE_PAGE); }
