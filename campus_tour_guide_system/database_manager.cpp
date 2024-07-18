@@ -14,6 +14,7 @@ DatabaseManager::DatabaseManager(const QString &config_file_path,
   db.setDatabaseName(dbname);
   db.setUserName(username);
   db.setPassword(password);
+  db.setConnectOptions("MYSQL_OPT_RECONNECT=1");
 
   // Try to open database
   if (!db.open()) {

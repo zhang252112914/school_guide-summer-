@@ -35,15 +35,17 @@ border-image: url(:/schoolpicture.jpg);
        <widget class="QLabel" name="label">
         <property name="font">
          <font>
-          <family>华文行楷</family>
+          <family>Xingkai SC</family>
           <pointsize>72</pointsize>
+          <italic>true</italic>
+          <bold>true</bold>
          </font>
         </property>
         <property name="text">
          <string>    校
  武  园
   大   导
-           行</string>
+           航</string>
         </property>
        </widget>
       </item>

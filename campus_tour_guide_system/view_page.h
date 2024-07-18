@@ -25,15 +25,12 @@ class ViewPage : public QWidget {
  public:
   explicit ViewPage(QWidget *parent = nullptr);
   ~ViewPage();
-  void DisplayInfo(const Info &info, const QByteArray &image_data,
-                   Sender sender);
 
  protected:
   void resizeEvent(QResizeEvent *event) override;
  private slots:
   void on_return_button_clicked();
   void HandlePointClicked(double x, double y);
-  void on_addnode_button_clicked();
   void on_clear_button_clicked();
   // 接受查询的结果并调用后端的查询函数
   void IdsReceiverAndFindCaller(const Node &node, Sender sender);
@@ -41,6 +38,8 @@ class ViewPage : public QWidget {
                         Sender sender);
   void IdsReceiver(const Node &node, Sender sender);
   void HandlePathVector(QVector<QPair<double, double>> route);
+  void DisplayInfo(const Info &info, const QByteArray &image_data,
+                   Sender sender);
   void OnNodeNotFound(Sender sender);
 
  private:

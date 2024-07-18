@@ -26,35 +26,6 @@ class CampusMap : public QObject {
  public:
   explicit CampusMap(QObject* parent = nullptr);
 
-  /**
-   * These Two functions are used to store new data during app execution,
-   * which will send signal to DatabaseManager.
-   */
-  int AddNode(double pos_x, double pos_y);
-  void AddEdge(const QPair<double, double>& start,
-               const QPair<double, double>& end);
-
-  // 下面这一部分是用于路径查询的函数，第一个函数就是接口，直接调用该函数即可
-
-  // 调用该函数将会返回pair，其中first是最短路径上节点的vector，第二个参数无效，相应函数已被注释
-  void FindPath(int start, int end);
-
-  // 基于campusmap中的edges和nodes建立邻接矩阵
-  QVector<QVector<double>> BuildMatrix();
-
-  // 深度优先搜索寻找两点之间的所有路径
-  void dfs(int current, int end, const QVector<QVector<double>>& matrix,
-           QVector<int>& path, QVector<QVector<int>>& allPaths);
-
-  // 返回最短路线上的节点
-  QVector<int> FindShortestPath(int node_one_id, int node_two_id,
-                                const QVector<QVector<double>>& matrix);
-  // 返回两个节点之间的所有路径
-  /*
-  QVector<QVector<int>> FindAllPaths(int start, int end,
-                                     const QVector<QVector<double>>& matrix);
-                                     */
-
  private slots:
   /**
    * @brief ReadNodeSlot This function is used to load the data sent by
@@ -113,6 +84,35 @@ class CampusMap : public QObject {
   void HandleImageDataFetchedSlot(const QByteArray& image_data);
 
  private:
+  /**
+   * These Two functions are used to store new data during app execution,
+   * which will send signal to DatabaseManager.
+   */
+  int AddNode(double pos_x, double pos_y);
+  void AddEdge(const QPair<double, double>& start,
+               const QPair<double, double>& end);
+
+  // 下面这一部分是用于路径查询的函数，第一个函数就是接口，直接调用该函数即可
+
+  // 调用该函数将会返回pair，其中first是最短路径上节点的vector，第二个参数无效，相应函数已被注释
+  void FindPath(int start, int end);
+
+  // 基于campusmap中的edges和nodes建立邻接矩阵
+  QVector<QVector<double>> BuildMatrix();
+
+  // 深度优先搜索寻找两点之间的所有路径
+  void dfs(int current, int end, const QVector<QVector<double>>& matrix,
+           QVector<int>& path, QVector<QVector<int>>& allPaths);
+
+  // 返回最短路线上的节点
+  QVector<int> FindShortestPath(int node_one_id, int node_two_id,
+                                const QVector<QVector<double>>& matrix);
+  // 返回两个节点之间的所有路径
+  /*
+  QVector<QVector<int>> FindAllPaths(int start, int end,
+                                     const QVector<QVector<double>>& matrix);
+                                     */
+
   QVector<Node> nodes;  // store site nodes
   QVector<Edge> edges;  // store edges
   QVector<Info> infos;  // store site info

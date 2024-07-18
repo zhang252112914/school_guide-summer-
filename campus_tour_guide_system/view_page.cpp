@@ -23,7 +23,9 @@ ViewPage::~ViewPage() { delete view_page; }
 void ViewPage::on_return_button_clicked() {
   if (graphics_display) {
     graphics_display->ClearPoints();
-    view_page->info_graphics_view->scene()->clear();
+    if (view_page->info_graphics_view->scene()) {
+      view_page->info_graphics_view->scene()->clear();
+    }
     view_page->text_edit->clear();
     graphics_display->ClearBluePoints();  // 调用清除点的函数
   }
@@ -100,17 +102,12 @@ void ViewPage::IdsReceiver(const Node &node, Sender sender) {
   emit MyInfoRequest(node.id, Sender::VIEW_PAGE);
 }
 
-void ViewPage::on_addnode_button_clicked() {
-  if (graphics_display) {
-    // 连接点
-    graphics_display->ConnectPoints();
-  }
-}
-
 void ViewPage::on_clear_button_clicked() {
   if (graphics_display) {
     graphics_display->ClearPoints();
-    view_page->info_graphics_view->scene()->clear();
+    if (view_page->info_graphics_view->scene()) {
+      view_page->info_graphics_view->scene()->clear();
+    }
     view_page->text_edit->clear();
     graphics_display->ClearBluePoints();  // 调用清除点的函数
   }
