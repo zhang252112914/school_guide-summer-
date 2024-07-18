@@ -25,6 +25,7 @@ AddSitePage::~AddSitePage() { delete add_site_page; }
 void AddSitePage::on_return_button_clicked() {
   emit BackToManagePage();
   this->hide();
+  on_cancel_button_clicked();
 }
 
 void AddSitePage::on_cancel_button_clicked() {
