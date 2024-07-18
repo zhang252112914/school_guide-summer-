@@ -2,6 +2,7 @@
 #define MESSAGE_MEDIATOR_H
 
 #include <QObject>
+#include <QStackedWidget>
 
 #include "campus_map.h"
 #include "database_manager.h"
@@ -16,7 +17,7 @@ class MessageMediator : public QObject {
   explicit MessageMediator(MainPage *main_page, ViewPage *view_page,
                            ManagePage *manage_page, HelpPage *help_page,
                            DatabaseManager *db, CampusMap *cp,
-                           QObject *parent = nullptr);
+                           QStackedWidget *sw, QObject *parent = nullptr);
 
  private:
   MainPage *main_page;
@@ -25,6 +26,7 @@ class MessageMediator : public QObject {
   HelpPage *help_page;
   DatabaseManager *db_manager;
   CampusMap *campus_map;
+  QStackedWidget *stacked_widget;
 
  signals:
 };

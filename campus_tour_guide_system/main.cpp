@@ -2,7 +2,9 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QMainWindow>
 #include <QMetaType>
+#include <QStackedWidget>
 #include <memory>
 
 #include "campus_map.h"
@@ -23,11 +25,24 @@ int main(int argc, char *argv[]) {
   qRegisterMetaType<Info>("Info");
   qRegisterMetaType<UpdateFlags>("UpdateFlags");
 
-  // Create MainPage and other pages
-  auto main_page = std::make_unique<MainPage>();
-  auto view_page = std::make_unique<ViewPage>();
-  auto manage_page = std::make_unique<ManagePage>();
-  auto help_page = std::make_unique<HelpPage>();
+  // Create a main window or a central widget if necessary
+  QMainWindow main_window;
+
+  // QStackedWidget managed by mainWindow
+  QStackedWidget *stacked_widget = new QStackedWidget(&main_window);
+
+  // Directly create and manage widgets with raw pointers, since QStackedWidget
+  // takes ownership
+  MainPage *main_page = new MainPage();
+  ViewPage *view_page = new ViewPage();
+  ManagePage *manage_page = new ManagePage();
+  HelpPage *help_page = new HelpPage();
+
+  // Add pages to the stacked widget
+  stacked_widget->addWidget(main_page);
+  stacked_widget->addWidget(view_page);
+  stacked_widget->addWidget(manage_page);
+  stacked_widget->addWidget(help_page);
 
   // DatabaseManager initialization
   QDir dir;
@@ -59,8 +74,8 @@ int main(int argc, char *argv[]) {
 
   // MessageMediator initialization
   auto message_mediator = std::make_unique<MessageMediator>(
-      main_page.get(), view_page.get(), manage_page.get(), help_page.get(),
-      db_manager.get(), campus_map.get());
+      main_page, view_page, manage_page, help_page, db_manager.get(),
+      campus_map.get(), stacked_widget);
 
   // Deserialize data
   db_manager->DeserializeNodes();
@@ -68,10 +83,8 @@ int main(int argc, char *argv[]) {
   db_manager->DeserializeInfos();
 
   // Show main page
-  main_page->show();
+  main_window.setCentralWidget(stacked_widget);
+  main_window.show();
 
-  int return_value = a.exec();
-
-  // Smart pointers will automatically clean up
-  return return_value;
+  return a.exec();
 }

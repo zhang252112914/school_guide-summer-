@@ -16,17 +16,8 @@ MainPage::~MainPage() { delete main_page; }
  * When corresponding button is clicked, main page will hide and subpage will
  * show.
  */
-void MainPage::on_view_button_clicked() {
-  this->hide();
-  emit ShowViewPage();
-}
+void MainPage::on_view_button_clicked() { emit ShowViewPage(); }
 
-void MainPage::on_manage_button_clicked() {
-  this->hide();
-  emit ShowManagePage();
-}
+void MainPage::on_manage_button_clicked() { emit ShowManagePage(); }
 
-void MainPage::on_help_button_clicked() {
-  this->hide();
-  emit ShowHelpPage();
-}
+void MainPage::on_help_button_clicked() { emit ShowHelpPage(); }

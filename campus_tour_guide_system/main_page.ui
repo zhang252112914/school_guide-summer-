@@ -52,8 +52,10 @@ border-image: url(:/schoolpicture.jpg);
            <widget class="QLabel" name="label">
             <property name="font">
              <font>
-              <family>华文行楷</family>
+              <family>Xingkai SC</family>
               <pointsize>72</pointsize>
+              <italic>true</italic>
+              <bold>true</bold>
              </font>
             </property>
             <property name="text">
@@ -95,8 +97,10 @@ border-image: url(:/schoolpicture.jpg);
            <widget class="QLabel" name="label_3">
             <property name="font">
              <font>
-              <family>华文行楷</family>
+              <family>Xingkai SC</family>
               <pointsize>72</pointsize>
+              <italic>true</italic>
+              <bold>true</bold>
              </font>
             </property>
             <property name="text">
@@ -108,8 +112,10 @@ border-image: url(:/schoolpicture.jpg);
            <widget class="QLabel" name="label_9">
             <property name="font">
              <font>
-              <family>华文行楷</family>
+              <family>Xingkai SC</family>
               <pointsize>72</pointsize>
+              <italic>true</italic>
+              <bold>true</bold>
              </font>
             </property>
             <property name="text">
@@ -151,8 +157,10 @@ border-image: url(:/schoolpicture.jpg);
            <widget class="QLabel" name="label_5">
             <property name="font">
              <font>
-              <family>华文行楷</family>
-              <pointsize>72</pointsize>
+               <family>Xingkai SC</family>
+               <pointsize>72</pointsize>
+               <italic>true</italic>
+               <bold>true</bold>
              </font>
             </property>
             <property name="text">
@@ -164,8 +172,10 @@ border-image: url(:/schoolpicture.jpg);
            <widget class="QLabel" name="label_12">
             <property name="font">
              <font>
-              <family>华文行楷</family>
+              <family>Xingkai SC</family>
               <pointsize>72</pointsize>
+              <italic>true</italic>
+              <bold>true</bold>
              </font>
             </property>
             <property name="text">
@@ -207,8 +217,10 @@ border-image: url(:/schoolpicture.jpg);
            <widget class="QLabel" name="label_11">
             <property name="font">
              <font>
-              <family>华文行楷</family>
+              <family>Xingkai SC</family>
               <pointsize>72</pointsize>
+              <italic>true</italic>
+              <bold>true</bold>
              </font>
             </property>
             <property name="text">
@@ -238,7 +250,7 @@ border-image: url(:/schoolpicture.jpg);
         <item>
          <widget class="QPushButton" name="manage_button">
           <property name="autoFillBackground">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <property name="styleSheet">
            <string notr="true"/>
