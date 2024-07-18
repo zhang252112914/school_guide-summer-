@@ -169,11 +169,16 @@ void GraphicsDisplay::PaintForAddEdgePage(
     double py1 = edge.first.second;
     double px2 = edge.second.first;
     double py2 = edge.second.second;
-    QPointF p1(px1, py1);
-    QPointF p2(px2, py2);
-    AddPoint(px1, py1);
-    AddPoint(px2, py2);
-    AddLine(p1, p2);
+    QGraphicsEllipseItem *point_one = nullptr, *point_two = nullptr;
+    QPointF p1(px1, py1), p2(px2, py2);
+    point_one =
+        scene->addEllipse(px1, py1, 10, 10, QPen(Qt::blue), QBrush(Qt::blue));
+    point_two =
+        scene->addEllipse(px2, py2, 10, 10, QPen(Qt::blue), QBrush(Qt::blue));
+    QGraphicsLineItem *line = scene->addLine(QLineF(p1, p2), QPen(Qt::blue, 2));
+    bluePoints.append(point_one);
+    bluePoints.append(point_two);
+    lines.append(line);
     qDebug() << px1 << " " << py1 << " " << px2 << " " << py2 << Qt::endl;
   }
 }
