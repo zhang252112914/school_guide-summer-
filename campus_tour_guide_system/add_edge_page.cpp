@@ -40,7 +40,11 @@ void AddEdgePage::on_confirm_button_clicked() {
   } else {
     QMessageBox::information(this, "提示", "添加失败");
   }
-  on_cancel_button_clicked();
+  add_edge_page->point_one_label->setText("第一个点：");
+  add_edge_page->point_two_label->setText("第二个点：");
+  add_edge_page->line_label->setText("边：");
+  graph->AddPoint(x1, y1);
+  graph->AddPoint(x2, y2);
 }
 
 void AddEdgePage::on_cancel_button_clicked() {
@@ -94,7 +98,7 @@ void AddEdgePage::ConfirmNode(Node back_node, Sender s) {
       x1 = back_node.pos_x;
       y2 = back_node.pos_y;
       n1_exist = 1;
-    } else {
+    } else if (n1_clicked && n2_clicked) {
       x2 = back_node.pos_x;
       y2 = back_node.pos_y;
       n2_exist = 1;
@@ -133,7 +137,8 @@ void AddEdgePage::PaintEdges(  //
     graph->AddPoint(px1, py1);
     graph->AddPoint(px2, py2);
     graph->AddLine(p1, p2);
+    qDebug() << px1 << " " << py1 << " " << px2 << " " << py2 << Qt::endl;
     qDebug() << "打印中";
   }
-  qDebug() << "成功打印边";
+  qDebug() << "成功完成";
 }

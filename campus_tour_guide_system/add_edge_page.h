@@ -25,9 +25,9 @@ class AddEdgePage : public QWidget {
   GraphicsDisplay *graph;
   double x1, y1, x2, y2;
   double px1, py1, px2, py2;
-  Node n1, n2;
-  Edge edge;
-  // QVector<Node> nodes;
+  // Node n1, n2;
+  // Edge edge;
+  QVector<QPair<double, double>> nodes;
   // QVector<QPair<QPair<double, double>, QPair<double, double>>> edges;
   //  判断已经点击了多少点
   bool n1_clicked = 0, n2_clicked = 0;
