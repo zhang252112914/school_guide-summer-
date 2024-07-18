@@ -14,7 +14,8 @@ AddEdgePage::AddEdgePage(QWidget *parent)
   add_edge_page->point_one_label->setText("第一个点：");
   add_edge_page->point_two_label->setText("第二个点：");
   add_edge_page->line_label->setText("边：");
-  QTimer::singleShot(0, this, [this]() { emit GetEdges(Sender::MANAGE_PAGE); });
+  // QTimer::singleShot(0, this, [this]() { emit GetEdges(Sender::MANAGE_PAGE);
+  // });
 }
 
 AddEdgePage::~AddEdgePage() { delete add_edge_page; }
@@ -127,18 +128,8 @@ void AddEdgePage::ConfirmNode(Node back_node, Sender s) {
 
 void AddEdgePage::PaintEdges(  //
     QVector<QPair<QPair<double, double>, QPair<double, double>>> edges) {
-  for (auto &edge : edges) {
-    px1 = edge.first.first;
-    py1 = edge.first.second;
-    px2 = edge.second.first;
-    py2 = edge.second.second;
-    QPointF p1(px1, py1);
-    QPointF p2(px2, py2);
-    graph->AddPoint(px1, py1);
-    graph->AddPoint(px2, py2);
-    graph->AddLine(p1, p2);
-    qDebug() << px1 << " " << py1 << " " << px2 << " " << py2 << Qt::endl;
-    qDebug() << "打印中";
-  }
+  graph->PaintForAddEdgePage(edges);
   qDebug() << "成功完成";
 }
+
+void AddEdgePage::PaintRequestWrapper() { emit GetEdges(Sender::MANAGE_PAGE); }

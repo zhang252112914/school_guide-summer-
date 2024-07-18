@@ -13,7 +13,7 @@ AddSitePage::AddSitePage(QWidget* parent)
     connect(graph, &GraphicsDisplay::PointClicked, this,
             &AddSitePage::receive_one_node);
   }
-  //设置输入框的提示内容
+  // 设置输入框的提示内容
   add_site_page->name_input->setPlaceholderText("景点名称");
   add_site_page->description_input->setPlaceholderText("景点介绍");
   add_site_page->pic_label->setText("No picture");
@@ -42,10 +42,10 @@ void AddSitePage::on_cancel_button_clicked() {
 void AddSitePage::on_confirm_button_clicked() {
   QString name = add_site_page->name_input->text();
   QString description = add_site_page->description_input->toPlainText();
-  //只有在id有效的时候才会发送添加景点的信号
+  // 只有在id有效的时候才会发送添加景点的信号
   qDebug() << name << '\n' << description;
   if (single_node.id != -1) {
-    //如果是新增加，则发送对应信号
+    // 如果是新增加，则发送对应信号
     if (!single_node.info_valid) {
       emit AddMessageCollection(single_node.id, name, description,
                                 image_data_container);
@@ -58,12 +58,12 @@ void AddSitePage::on_confirm_button_clicked() {
     }
     image_changed = false;
   }
-  //反馈给用户一些信息,可能做出一个弹窗会更加合适
+  // 反馈给用户一些信息,可能做出一个弹窗会更加合适
   else {
     qDebug() << "The node you select is invalid";
   }
   single_node.id = -1;
-  //恢复原状
+  // 恢复原状
   on_cancel_button_clicked();
 }
 
@@ -86,7 +86,7 @@ void AddSitePage::on_add_picture_button_clicked() {
     QImage finalimage;
     finalimage.loadFromData(image_data);
 
-    //展示选中的图片
+    // 展示选中的图片
     QPixmap pixmap = QPixmap::fromImage(image);
     QSize label_size = add_site_page->pic_label->size();
     QPixmap scaled_pixmap = pixmap.scaled(label_size, Qt::KeepAspectRatio,
@@ -128,12 +128,12 @@ void AddSitePage::receive_one_node(double x, double y) {
 
 void AddSitePage::ModifyNode(Node back_node, Sender sender) {
   if (sender == Sender::MANAGE_PAGE) {
-    //去除前面旧的节点信息和图像
+    // 去除前面旧的节点信息和图像
     graph->DeletePointOfAddPage();
     single_node = back_node;
-    //依据新的信息绘制点
+    // 依据新的信息绘制点
     graph->PaintBluePoint(single_node);
-    //判断是否是景点，如果是景点就显示已有的信息，如果不是就显示占位符
+    // 判断是否是景点，如果是景点就显示已有的信息，如果不是就显示占位符
     if (single_node.info_valid) {
       emit PresentInfoRequest(single_node.id);
     } else {
@@ -171,7 +171,7 @@ void AddSitePage::InvalidNode(Sender sender) {
 
 void AddSitePage::PaintMap(QVector<Node> nodes) {
   qDebug() << "complete painting";
-  //红色表示是景点，黄色表示是普通节点
+  // 红色表示是景点，黄色表示是普通节点
   graph->PaintForAddSitePage(nodes);
 }
 

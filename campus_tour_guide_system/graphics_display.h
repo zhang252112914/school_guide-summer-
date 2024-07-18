@@ -35,6 +35,8 @@ class GraphicsDisplay : public QGraphicsView {
 
   // 专为addsitepage绘制节点的函数（用颜色区分普通节点和景点）
   void PaintForAddSitePage(QVector<Node> nodes);
+  void PaintForAddEdgePage(
+      QVector<QPair<QPair<double, double>, QPair<double, double>>> edges);
   void PaintBluePoint(Node node);
   void DeletePointOfAddPage();
   void DeletePointOneOfAddEdgePage();
