@@ -99,7 +99,7 @@ void ViewPage::IdsReceiver(const Node &node, Sender sender) {
   if (graphics_display) {
     graphics_display->AddBlackPoint(node.pos_x, node.pos_y);
   }
-  emit MyInfoRequest(node.id, Sender::VIEW_PAGE);
+  emit MyInfoRequest(node.info_id, Sender::VIEW_PAGE);
 }
 
 void ViewPage::on_clear_button_clicked() {

@@ -14,7 +14,7 @@ AddSitePage::AddSitePage(QWidget* parent)
             &AddSitePage::receive_one_node);
   }
   setWindowTitle("景点管理");
-  //设置输入框的提示内容
+  // 设置输入框的提示内容
   add_site_page->name_input->setPlaceholderText("景点名称");
   add_site_page->description_input->setPlaceholderText("景点介绍");
   add_site_page->pic_label->setText("No picture");
@@ -137,7 +137,8 @@ void AddSitePage::ModifyNode(Node back_node, Sender sender) {
     graph->PaintBluePoint(single_node);
     // 判断是否是景点，如果是景点就显示已有的信息，如果不是就显示占位符
     if (single_node.info_valid) {
-      emit PresentInfoRequest(single_node.id);
+      qDebug() << "hi there";
+      emit PresentInfoRequest(single_node.info_id);
     } else {
       add_site_page->name_input->setPlaceholderText("输入景点名称");
       add_site_page->description_input->setPlaceholderText("输入景点介绍");

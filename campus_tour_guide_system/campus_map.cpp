@@ -168,8 +168,11 @@ void CampusMap::ManageIdSend(double pre_x, double pre_y, double last_x,
 */
 
 void CampusMap::GetInfoFromIdSlot(int info_id, Sender sender) {
+  qDebug() << "hi hi";
   last_sender = sender;
+  qDebug() << info_id;
   if (info_map.contains(info_id)) {
+    qDebug() << "hahaha";
     last_info_id = info_id;
     emit RequestImageData(info_id);
   } else {
