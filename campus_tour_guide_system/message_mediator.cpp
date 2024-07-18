@@ -85,16 +85,16 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
   connect(campus_map, &CampusMap::InfoFound, view_page, &ViewPage::DisplayInfo);
   connect(manage_page, &ManagePage::ShowAddEdgePage, add_edge_page,
           &AddEdgePage::show);
-  // 在调用页面的同时触发绘图
-  connect(manage_page, &ManagePage::ShowAddSiteEdge, add_site_page,
-          &AddSitePage::PaintRequestWrapper);
-  connect(manage_page, &ManagePage::ShowAddSiteEdge, add_site_page,
-          &AddSitePage::show);
 
-  connect(add_edge_page, &AddEdgePage::BackToManagePage, manage_page,
-          &ManagePage::show);
-  connect(add_site_page, &AddSitePage::BackToManagePage, manage_page,
-          &ManagePage::show);
+  connect(manage_page, &ManagePage::ShowAddEdgePage,
+          [this]() { this->stacked_widget->setCurrentIndex(4); });
+  connect(manage_page, &ManagePage::ShowAddSitePage,
+          [this]() { this->stacked_widget->setCurrentIndex(5); });
+
+  connect(add_edge_page, &AddEdgePage::BackToManagePage,
+          [this]() { this->stacked_widget->setCurrentIndex(2); });
+  connect(add_site_page, &AddSitePage::BackToManagePage,
+          [this]() { this->stacked_widget->setCurrentIndex(2); });
 
   // add_site_page的信号和槽
   // 下面两个connect都是针对add_site_page和campus_map之间关于id的交互

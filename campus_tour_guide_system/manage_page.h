@@ -29,7 +29,7 @@ class ManagePage : public QWidget {
  signals:
   void BackToMainPage();
   void ShowAddEdgePage();
-  void ShowAddSiteEdge();
+  void ShowAddSitePage();
 };
 
 #endif  // MANAGE_PAGE_H

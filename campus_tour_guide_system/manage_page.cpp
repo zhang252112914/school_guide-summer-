@@ -22,5 +22,5 @@ void ManagePage::on_add_edge_button_clicked() {
 
 void ManagePage::on_add_site_button_clicked() {
   this->hide();
-  emit ShowAddSiteEdge();
+  emit ShowAddSitePage();
 }
