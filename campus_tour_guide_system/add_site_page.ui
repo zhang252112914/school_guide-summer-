@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>590</width>
-    <height>337</height>
+    <height>341</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <widget class="GraphicsDisplay" name="graph_view"/>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,1,4,1,8,2,2,2,2,2">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,2,1,4,1,8,2,2,2,0,2,2">
      <item>
       <spacer name="verticalSpacer_2">
        <property name="orientation">
@@ -98,7 +98,14 @@
      <item>
       <widget class="QPushButton" name="confirm_button">
        <property name="text">
-        <string>确定</string>
+        <string>确定修改</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="delete_button">
+       <property name="text">
+        <string>删除景点</string>
        </property>
       </widget>
      </item>

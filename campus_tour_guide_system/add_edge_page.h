@@ -38,7 +38,7 @@ class AddEdgePage : public QWidget {
  signals:
   void BackToManagePage();
   // 回传寻找是否为已有点（点击范围）
-  void FindNode(double x, double y, Sender s = Sender::MANAGE_PAGE);
+  void FindNode(double x, double y, Sender s = Sender::ADD_EDGE_PAGE);
   void NewEdge(const QPair<double, double> &start,
                const QPair<double, double> &end);
   void NewNode(double x, double y);

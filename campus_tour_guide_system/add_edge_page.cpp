@@ -15,7 +15,8 @@ AddEdgePage::AddEdgePage(QWidget *parent)
   add_edge_page->point_one_label->setText("第一个点：");
   add_edge_page->point_two_label->setText("第二个点：");
   add_edge_page->line_label->setText("边：");
-  // QTimer::singleShot(0, this, [this]() { emit GetEdges(Sender::MANAGE_PAGE);
+  // QTimer::singleShot(0, this, [this]() { emit
+  // GetEdges(Sender::ADD_EDGE_PAGE);
   // });
 }
 
@@ -53,7 +54,11 @@ void AddEdgePage::on_cancel_button_clicked() {
   add_edge_page->point_one_label->setText("第一个点：");
   add_edge_page->point_two_label->setText("第二个点：");
   add_edge_page->line_label->setText("边：");
-  graph->DeletePointsOfAddEdgePage();
+  if (n1_clicked && n2_clicked) {
+    graph->DeletePointsOfAddEdgePage();
+  } else if (n1_clicked && !n2_clicked) {
+    graph->DeletePointOneOfAddEdgePage();
+  }
   n1_clicked = 0;
   n2_clicked = 0;
   n1_exist = 0;
@@ -95,7 +100,7 @@ void AddEdgePage::receive_one_node(double x, double y) {  // 考虑点击范围
 }
 
 void AddEdgePage::ConfirmNode(Node back_node, Sender s) {
-  if (s == Sender::MANAGE_PAGE) {
+  if (s == Sender::ADD_EDGE_PAGE) {
     if (n1_clicked && !n2_clicked) {
       x1 = back_node.pos_x;
       y2 = back_node.pos_y;
@@ -130,10 +135,10 @@ void AddEdgePage::ConfirmNode(Node back_node, Sender s) {
 void AddEdgePage::PaintEdges(  //
     QVector<QPair<QPair<double, double>, QPair<double, double>>> edges,
     Sender s) {
-  if (s == Sender::MANAGE_PAGE) {
+  if (s == Sender::ADD_EDGE_PAGE) {
     graph->PaintForAddEdgePage(edges);
     qDebug() << "成功完成";
   }
 }
 
-void AddEdgePage::RequestWrapper() { emit GetEdges(Sender::MANAGE_PAGE); }
+void AddEdgePage::RequestWrapper() { emit GetEdges(Sender::ADD_EDGE_PAGE); }

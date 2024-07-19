@@ -25,8 +25,9 @@ AddSitePage::~AddSitePage() { delete add_site_page; }
 
 void AddSitePage::on_return_button_clicked() {
   emit BackToManagePage();
-  this->hide();
   on_cancel_button_clicked();
+  PaintRequestWrapper();
+  this->hide();
 }
 
 void AddSitePage::on_cancel_button_clicked() {
@@ -129,7 +130,7 @@ void AddSitePage::receive_one_node(double x, double y) {
 }
 
 void AddSitePage::ModifyNode(Node back_node, Sender sender) {
-  if (sender == Sender::MANAGE_PAGE) {
+  if (sender == Sender::ADD_SITE_PAGE) {
     // 去除前面旧的节点信息和图像
     graph->DeletePointOfAddPage();
     single_node = back_node;
@@ -148,7 +149,7 @@ void AddSitePage::ModifyNode(Node back_node, Sender sender) {
 
 void AddSitePage::PresentInfo(const Info& info, const QByteArray& image_data,
                               Sender sender) {
-  if (sender == Sender::MANAGE_PAGE) {
+  if (sender == Sender::ADD_SITE_PAGE) {
     add_site_page->name_input->setText(info.name);
     add_site_page->description_input->setText(info.description);
     QImage image;
@@ -166,7 +167,7 @@ void AddSitePage::PresentInfo(const Info& info, const QByteArray& image_data,
 }
 
 void AddSitePage::InvalidNode(Sender sender) {
-  if (sender == Sender::MANAGE_PAGE) {
+  if (sender == Sender::ADD_SITE_PAGE) {
     qDebug() << "useless click";
     single_node.id = -1;
   }
@@ -179,3 +180,18 @@ void AddSitePage::PaintMap(QVector<Node> nodes) {
 }
 
 void AddSitePage::PaintRequestWrapper() { emit PaintRequest(); }
+
+void AddSitePage::on_delete_button_clicked() {
+  if (single_node.id != -1 && single_node.info_valid) {
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Confirm Delete",
+                                  "Are you sure you want to delete this site?",
+                                  QMessageBox::Yes | QMessageBox::No);
+    if (reply == QMessageBox::Yes) {
+      qDebug() << "Item deleted";
+      emit DeleteInfoRequest(single_node.id);
+    } else {
+      qDebug() << "Deletion canceled";
+    }
+  }
+}

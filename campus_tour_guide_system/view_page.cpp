@@ -75,6 +75,7 @@ void ViewPage::resizeEvent(QResizeEvent *event) {
 }
 
 void ViewPage::HandlePointClicked(double x, double y) {
+  emit RequestSites(Sender::VIEW_PAGE);
   if (!graphics_display) return;
 
   // 记录点击的坐标

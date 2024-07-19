@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QIcon>
 #include <QMainWindow>
 #include <QMetaType>
 #include <QStackedWidget>
@@ -29,6 +30,8 @@ int main(int argc, char *argv[]) {
 
   // Create a main window or a central widget if necessary
   QMainWindow main_window;
+  QIcon app_icon(":/paper-plane.png");
+  main_window.setWindowIcon(app_icon);
 
   // QStackedWidget managed by mainWindow
   QStackedWidget *stacked_widget = new QStackedWidget(&main_window);

@@ -11,8 +11,8 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
       view_page(view_page),
       manage_page(manage_page),
       help_page(help_page),
-      add_edge_page(add_edge_page),
       add_site_page(add_site_page),
+      add_edge_page(add_edge_page),
       db_manager(db),
       campus_map(cp),
       stacked_widget(sw) {
@@ -88,8 +88,10 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
 
   connect(manage_page, &ManagePage::ShowAddEdgePage,
           [this]() { this->stacked_widget->setCurrentIndex(4); });
-  connect(manage_page, &ManagePage::ShowAddSitePage,
-          [this]() { this->stacked_widget->setCurrentIndex(5); });
+  connect(manage_page, &ManagePage::ShowAddSitePage, [this]() {
+    this->add_site_page->PaintRequestWrapper();
+    this->stacked_widget->setCurrentIndex(5);
+  });
 
   connect(add_edge_page, &AddEdgePage::BackToManagePage,
           [this]() { this->stacked_widget->setCurrentIndex(2); });
@@ -137,4 +139,8 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
           &CampusMap::SearchNodeSlot);
   connect(campus_map, &CampusMap::NodeFound, add_edge_page,
           &AddEdgePage::ConfirmNode);
+
+  // Delete Site
+  connect(add_site_page, &AddSitePage::DeleteInfoRequest, campus_map,
+          &CampusMap::DeleteInfoSlot);
 }

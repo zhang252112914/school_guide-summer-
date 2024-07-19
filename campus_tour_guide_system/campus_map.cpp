@@ -44,7 +44,7 @@ void CampusMap::ReadEdgeSlot(const Edge& edge) {
 void CampusMap::ReadInfoSlot(const Info& info) {
   infos.push_back(info);
   info_map[info.id] = info;
-  info_count++;
+  info_count = info.id;
 }
 
 void CampusMap::AddEdgeSlot(const QVector<QPair<double, double>>& coordinates) {
