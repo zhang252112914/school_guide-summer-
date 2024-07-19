@@ -22,9 +22,6 @@ HelpPage::HelpPage(QWidget *parent)
 
   connect(help_page->func_show4, &QPushButton::clicked, this,
           [=]() { ShowGif(":/3.gif"); });
-
-  connect(help_page->func_show5, &QPushButton::clicked, this,
-          [=]() { ShowGif(""); });
 }
 
 HelpPage::~HelpPage() { delete help_page; }

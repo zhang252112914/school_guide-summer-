@@ -19,6 +19,7 @@ class HelpPage : public QWidget {
   void CloseAllGif();
 
  private:
+  void UpdateSize();
   Ui::HelpPage *help_page;
 
  signals:

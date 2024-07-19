@@ -272,35 +272,28 @@ border-image: url(:/R-C.jpg);
         <item>
          <widget class="QPushButton" name="func_show1">
           <property name="text">
-           <string>PushButton</string>
+           <string>地图查询</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="func_show2">
           <property name="text">
-           <string>PushButton</string>
+           <string>添加路径</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="func_show4">
           <property name="text">
-           <string>PushButton</string>
+           <string>添加景点</string>
           </property>
          </widget>
         </item>
         <item>
          <widget class="QPushButton" name="func_show3">
           <property name="text">
-           <string>PushButton</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="func_show5">
-          <property name="text">
-           <string>PushButton</string>
+           <string>删除景点</string>
           </property>
          </widget>
         </item>
