@@ -26,6 +26,7 @@ AddSitePage::~AddSitePage() { delete add_site_page; }
 void AddSitePage::on_return_button_clicked() {
   emit BackToManagePage();
   on_cancel_button_clicked();
+  graph->ClearMapPoints();
   PaintRequestWrapper();
   this->hide();
 }

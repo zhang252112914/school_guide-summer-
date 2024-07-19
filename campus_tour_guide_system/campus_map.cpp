@@ -97,6 +97,13 @@ void CampusMap::AddInfoSlot(int node_id, const QString& name,
   node.info_id = ++info_count;
   node.info_valid = true;
 
+  for (auto& it : nodes) {
+    if (it.id == node.id) {
+      it.info_id = node.info_id;
+      it.info_valid = true;
+    }
+  }
+
   Info info(info_count, name, description);
 
   infos.append(info);
@@ -187,6 +194,7 @@ void CampusMap::GetSiteSlot(Sender sender) {
     if (it.info_valid) {
       QString name = info_map[it.info_id].name;
       sites.append({{it.pos_x, it.pos_y}, name});
+      qDebug() << name;
     }
   if (sites.isEmpty()) {
     qDebug() << "No valid sites to send.";

@@ -23,6 +23,8 @@ class GraphicsDisplay : public QGraphicsView {
   CampusMap *campus_map;
   GraphicsDisplay *my_graphics;
 
+  void ClearMapPoints();
+
   // 公共方法来添加点和连接点
   void AddPoint(int x, int y, const QString &labelText);
   void ConnectPoints();  // 新增方法来绘制线段连接点

@@ -178,6 +178,16 @@ void GraphicsDisplay::PaintForAddSitePage(QVector<Node> nodes) {
   }
 }
 
+void GraphicsDisplay::ClearMapPoints() {
+  for (auto it : bluePoints) {
+    scene->removeItem(it);
+    delete it;
+  }
+  bluePoints.clear();
+  scene->update();
+  this->viewport()->update();
+}
+
 void GraphicsDisplay::PaintForAddEdgePage(
     QVector<QPair<QPair<double, double>, QPair<double, double>>> edges) {
   for (auto edge : edges) {
