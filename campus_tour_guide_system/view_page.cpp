@@ -53,6 +53,7 @@ void ViewPage::HandleSitesFound(
     double x = site.first.first;
     double y = site.first.second;
     const QString &label = site.second;
+    qDebug() << site.second;
     graphics_display->AddPoint(x, y, label);
   }
   qDebug() << "do ";

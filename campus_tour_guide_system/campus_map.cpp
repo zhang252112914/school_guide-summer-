@@ -161,7 +161,13 @@ void CampusMap::DeleteInfoSlot(int node_id) {
   int info_id = node.info_id;
   info_map.remove(info_id);
   node.info_id = 0;
-  node.info_valid = false;
+
+  for (auto& it : nodes) {
+    if (it.id == node.id) {
+      it.info_id = 0;
+      it.info_valid = false;
+    }
+  }
 
   emit InfoDeleted(info_id);
 }

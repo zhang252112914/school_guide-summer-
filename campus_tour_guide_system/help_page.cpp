@@ -9,19 +9,19 @@ HelpPage::HelpPage(QWidget *parent)
     : QWidget(parent), help_page(new Ui::HelpPage) {
   help_page->setupUi(this);
 
-  //连接用于触发gif展示的信号
-  //需要统一gif的尺寸以保持美观
+  // 连接用于触发gif展示的信号
+  // 需要统一gif的尺寸以保持美观
   connect(help_page->func_show1, &QPushButton::clicked, this,
-          [=]() { ShowGif(":/moon.gif"); });
+          [=]() { ShowGif(":/1.gif"); });
 
   connect(help_page->func_show2, &QPushButton::clicked, this,
-          [=]() { ShowGif(":/wind.gif"); });
+          [=]() { ShowGif(":/2.gif"); });
 
   connect(help_page->func_show3, &QPushButton::clicked, this,
-          [=]() { ShowGif(""); });
+          [=]() { ShowGif(":/3.gif"); });
 
   connect(help_page->func_show4, &QPushButton::clicked, this,
-          [=]() { ShowGif(""); });
+          [=]() { ShowGif(":/3.gif"); });
 
   connect(help_page->func_show5, &QPushButton::clicked, this,
           [=]() { ShowGif(""); });
