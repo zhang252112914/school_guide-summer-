@@ -25,6 +25,7 @@ AddEdgePage::~AddEdgePage() { delete add_edge_page; }
 void AddEdgePage::on_return_button_clicked() {
   this->hide();
   emit BackToManagePage();
+  on_cancel_button_clicked();
 }
 
 void AddEdgePage::on_confirm_button_clicked() {
@@ -43,11 +44,9 @@ void AddEdgePage::on_confirm_button_clicked() {
   } else {
     QMessageBox::information(this, "提示", "添加失败");
   }
-  add_edge_page->point_one_label->setText("第一个点：");
-  add_edge_page->point_two_label->setText("第二个点：");
-  add_edge_page->line_label->setText("边：");
   graph->AddPoint(x1, y1);
   graph->AddPoint(x2, y2);
+  on_cancel_button_clicked();
 }
 
 void AddEdgePage::on_cancel_button_clicked() {
@@ -138,6 +137,8 @@ void AddEdgePage::PaintEdges(  //
   if (s == Sender::ADD_EDGE_PAGE) {
     graph->PaintForAddEdgePage(edges);
     qDebug() << "成功完成";
+  }
+  for (auto edge : edges) {
   }
 }
 

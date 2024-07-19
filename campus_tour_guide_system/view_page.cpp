@@ -42,6 +42,9 @@ void ViewPage::HandleSitesFound(
     qDebug() << "No sites found.";
   }
   graphics_display->ClearPoints();
+
+  graphics_display->ClearBluePoints();
+  // graphics_display->ClearRedPoints();
   for (const auto &site : sites) {
     qDebug() << "Site position: " << site.first.first << ", "
              << site.first.second << " with name: " << site.second;
@@ -75,7 +78,7 @@ void ViewPage::resizeEvent(QResizeEvent *event) {
 }
 
 void ViewPage::HandlePointClicked(double x, double y) {
-  emit RequestSites(Sender::VIEW_PAGE);
+  // emit RequestSites(Sender::VIEW_PAGE);
   if (!graphics_display) return;
 
   // 记录点击的坐标

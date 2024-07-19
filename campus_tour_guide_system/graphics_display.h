@@ -31,6 +31,7 @@ class GraphicsDisplay : public QGraphicsView {
   void AddPoint(double x, double y);       // 重载，不需要标签
   void AddBlackPoint(double x, double y);  // 添加黑色点的方法
   void ClearBluePoints();
+  void ClearRedPoints();
   void resizeEvent(QResizeEvent *event) override;
 
   // 专为addsitepage绘制节点的函数（用颜色区分普通节点和景点）

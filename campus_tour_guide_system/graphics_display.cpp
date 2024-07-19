@@ -92,6 +92,16 @@ void GraphicsDisplay::ClearBluePoints() {
   this->viewport()->update();
 }
 
+void GraphicsDisplay::ClearRedPoints() {
+  for (auto point : points) {
+    scene->removeItem(point);
+    delete point;
+  }
+  points.clear();
+  scene->update();
+  this->viewport()->update();
+}
+
 void GraphicsDisplay::mousePressEvent(QMouseEvent *event) {
   QPointF scenePos = this->mapToScene(event->pos());
   double x = scenePos.x();
@@ -132,16 +142,20 @@ void GraphicsDisplay::DisplayPoint(double x, double y, bool matched) {
 }
 
 void GraphicsDisplay::AddBlackPoint(double x, double y) {
-  if (blackPoints.size() > maxBlackPoints) {  // 如果达到或超过最大点数限制
-                                              // 移除最早添加的点
+  qDebug() << blackPoints.size() << "个";
+  if (blackPoints.size() >= maxBlackPoints) {  // 如果达到或超过最大点数限制
+                                               // 移除最早添加的点
+    qDebug() << "do it";
     scene->removeItem(blackPoints[0]);
     delete blackPoints[0];
     blackPoints.removeAt(0);
+    qDebug() << blackPoints.size() << "个";
   }
   // 添加新的更大的黑色点
   QGraphicsEllipseItem *point = scene->addEllipse(
       x - 10, y - 10, 20, 20, QPen(Qt::black), QBrush(Qt::black));
   blackPoints.append(point);
+  qDebug() << blackPoints.size() << "个";
 }
 
 void GraphicsDisplay::PaintForAddSitePage(QVector<Node> nodes) {
