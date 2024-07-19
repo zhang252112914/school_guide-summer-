@@ -41,6 +41,7 @@ class ViewPage : public QWidget {
   void DisplayInfo(const Info &info, const QByteArray &image_data,
                    Sender sender);
   void OnNodeNotFound(Sender sender);
+  void RequestSitesWrapper();
 
  private:
   Ui::ViewPage *view_page;

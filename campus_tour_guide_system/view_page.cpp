@@ -20,6 +20,8 @@ ViewPage::ViewPage(QWidget *parent)
 
 ViewPage::~ViewPage() { delete view_page; }
 
+void ViewPage::RequestSitesWrapper() { emit RequestSites(Sender::VIEW_PAGE); }
+
 void ViewPage::on_return_button_clicked() {
   if (graphics_display) {
     graphics_display->ClearPoints();

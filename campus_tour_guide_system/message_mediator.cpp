@@ -75,6 +75,9 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
           &CampusMap::GetInfoFromIdSlot);
   connect(view_page, &ViewPage::CallFindPath, campus_map, &CampusMap::FindPath);
 
+  connect(main_page, &MainPage::ShowViewPage, view_page,
+          &ViewPage::RequestSitesWrapper);
+
   connect(campus_map, &CampusMap::NodeFound, view_page,
           &ViewPage::IdsReceiverAndFindCaller);
   connect(campus_map, &CampusMap::SitesFound, view_page,
