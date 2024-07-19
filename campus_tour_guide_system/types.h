@@ -1,7 +1,7 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-const double RADIUS = 30.0;
+const double RADIUS = 20.0;
 const int MAX_SIZE = 2 * 1024 * 1024;
 
 #include <QMetaType>

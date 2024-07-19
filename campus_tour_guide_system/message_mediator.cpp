@@ -127,10 +127,8 @@ MessageMediator::MessageMediator(MainPage *main_page, ViewPage *view_page,
   connect(manage_page, &ManagePage::ShowAddEdgePage, add_edge_page,
           &AddEdgePage::RequestWrapper);
 
-  connect(add_edge_page, &AddEdgePage::NewNode, campus_map,
-          &CampusMap::AddNode);
   connect(add_edge_page, &AddEdgePage::NewEdge, campus_map,
-          &CampusMap::AddEdge);
+          &CampusMap::AddEdgeSlot);
   connect(add_edge_page, &AddEdgePage::GetEdges, campus_map,
           &CampusMap::GetEdgeSlot);
   connect(campus_map, &CampusMap::EdgesFound, add_edge_page,

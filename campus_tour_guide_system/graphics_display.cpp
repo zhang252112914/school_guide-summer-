@@ -159,6 +159,8 @@ void GraphicsDisplay::AddBlackPoint(double x, double y) {
 }
 
 void GraphicsDisplay::PaintForAddSitePage(QVector<Node> nodes) {
+  qDebug() << "hey";
+  bluePoints.clear();
   for (auto it : nodes) {
     QGraphicsEllipseItem *point = nullptr;
     if (it.info_valid) {
@@ -185,10 +187,10 @@ void GraphicsDisplay::PaintForAddEdgePage(
     double py2 = edge.second.second;
     QGraphicsEllipseItem *point_one = nullptr, *point_two = nullptr;
     QPointF p1(px1, py1), p2(px2, py2);
-    point_one =
-        scene->addEllipse(px1, py1, 10, 10, QPen(Qt::blue), QBrush(Qt::blue));
-    point_two =
-        scene->addEllipse(px2, py2, 10, 10, QPen(Qt::blue), QBrush(Qt::blue));
+    point_one = scene->addEllipse(px1 - 5, py1 - 5, 10, 10, QPen(Qt::blue),
+                                  QBrush(Qt::blue));
+    point_two = scene->addEllipse(px2 - 5, py2 - 5, 10, 10, QPen(Qt::blue),
+                                  QBrush(Qt::blue));
     QGraphicsLineItem *line = scene->addLine(QLineF(p1, p2), QPen(Qt::blue, 2));
     bluePoints.append(point_one);
     bluePoints.append(point_two);

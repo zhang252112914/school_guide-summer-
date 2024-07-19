@@ -68,6 +68,7 @@ void AddSitePage::on_confirm_button_clicked() {
   single_node.id = -1;
   // 恢复原状
   on_cancel_button_clicked();
+  PaintRequestWrapper();
 }
 
 void AddSitePage::on_add_picture_button_clicked() {
@@ -123,6 +124,7 @@ QByteArray AddSitePage::compressImage(const QImage& image) {
 }
 
 void AddSitePage::receive_one_node(double x, double y) {
+  on_cancel_button_clicked();
   pos_x = x;
   pos_y = y;
   qDebug() << "Receive x and y:" << x << ":" << y;

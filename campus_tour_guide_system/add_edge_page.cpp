@@ -37,15 +37,16 @@ void AddEdgePage::on_confirm_button_clicked() {
     QPointF p1(x1, y1);
     QPointF p2(x2, y2);
     graph->AddLine(p1, p2);  // 画线
-    emit NewNode(x1, y1);
-    emit NewNode(x2, y2);
-    emit NewEdge(StartP, EndP);
+    graph->AddPoint(x1, y1);
+    graph->AddPoint(x2, y2);
+    QVector<QPair<double, double>> coordinates;
+    coordinates.append(StartP);
+    coordinates.append(EndP);
+    emit NewEdge(coordinates);
     QMessageBox::information(this, "提示", "添加成功");
   } else {
     QMessageBox::information(this, "提示", "添加失败");
   }
-  graph->AddPoint(x1, y1);
-  graph->AddPoint(x2, y2);
   on_cancel_button_clicked();
 }
 
@@ -60,6 +61,7 @@ void AddEdgePage::on_cancel_button_clicked() {
   }
   n1_clicked = 0;
   n2_clicked = 0;
+  n2_clicked_mult = 0;
   n1_exist = 0;
   n2_exist = 0;
   qDebug() << "恢复";
@@ -102,7 +104,7 @@ void AddEdgePage::ConfirmNode(Node back_node, Sender s) {
   if (s == Sender::ADD_EDGE_PAGE) {
     if (n1_clicked && !n2_clicked) {
       x1 = back_node.pos_x;
-      y2 = back_node.pos_y;
+      y1 = back_node.pos_y;
       n1_exist = 1;
     } else if (n1_clicked && n2_clicked) {
       x2 = back_node.pos_x;
@@ -137,8 +139,6 @@ void AddEdgePage::PaintEdges(  //
   if (s == Sender::ADD_EDGE_PAGE) {
     graph->PaintForAddEdgePage(edges);
     qDebug() << "成功完成";
-  }
-  for (auto edge : edges) {
   }
 }
 
